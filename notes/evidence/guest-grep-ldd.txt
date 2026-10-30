@@ -1,0 +1,53 @@
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.cpp:1374:		_radio_status_critical = (radio_status.txbuf < RADIO_BUFFER_LOW_PERCENTAGE);
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.cpp:1376:		if (radio_status.txbuf < RADIO_BUFFER_CRITICAL_LOW_PERCENTAGE) {
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.cpp:1380:		} else if (radio_status.txbuf < RADIO_BUFFER_LOW_PERCENTAGE) {
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.cpp:1384:		} else if (radio_status.txbuf > RADIO_BUFFER_HALF_PERCENTAGE) {
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.cpp:2967:			printf("\t  txbuf:\t%" PRIu8 "\n", _rstatus.txbuf);
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.h:685:	static constexpr unsigned RADIO_BUFFER_CRITICAL_LOW_PERCENTAGE = 25;
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.h:686:	static constexpr unsigned RADIO_BUFFER_LOW_PERCENTAGE = 35;
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_main.h:687:	static constexpr unsigned RADIO_BUFFER_HALF_PERCENTAGE = 50;
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink/pymavlink/generator/swift/Tests/MAVLinkTests/Testdata/ardupilotmega.xml:975:      <field name="txbuf" type="uint8_t">how full the tx buffer is as a percentage</field>
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink/pymavlink/generator/swift/Tests/MAVLinkTests/Testdata/common.xml:3097:      <field type="uint8_t" name="txbuf">Remaining free buffer space in percent.</field>
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink/pymavlink/tests/snapshottests/resources/common.xml:5905:      <field type="uint8_t" name="txbuf" units="%">Remaining free transmitter buffer space.</field>
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink/message_definitions/v1.0/ardupilotmega.xml:1498:      <field type="uint8_t" name="txbuf" units="%">How full the tx buffer is.</field>
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink/message_definitions/v1.0/common.xml:6253:      <field type="uint8_t" name="txbuf" units="%">Remaining free transmitter buffer space.</field>
+/home/lab/PX4-Autopilot/src/modules/mavlink/module.yaml:120:                    `txbuf` field reported by radio_status.
+/home/lab/PX4-Autopilot/src/modules/mavlink/mavlink_receiver.cpp:1708:		status.txbuf = rstatus.txbuf;
+===LDD
+	linux-vdso.so.1 (0x00007ffd4f255000)
+	libgz-transport13.so.13 => /lib/x86_64-linux-gnu/libgz-transport13.so.13 (0x00007ba501dfb000)
+	libgz-msgs10.so.10 => /lib/x86_64-linux-gnu/libgz-msgs10.so.10 (0x00007ba501400000)
+	libprotobuf.so.32 => /lib/x86_64-linux-gnu/libprotobuf.so.32 (0x00007ba501000000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007ba501d12000)
+	libstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007ba500c00000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007ba5017d2000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007ba500800000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007ba501e8c000)
+	libzmq.so.5 => /lib/x86_64-linux-gnu/libzmq.so.5 (0x00007ba50135e000)
+	libuuid.so.1 => /lib/x86_64-linux-gnu/libuuid.so.1 (0x00007ba501d06000)
+	libgz-utils2.so.2 => /lib/x86_64-linux-gnu/libgz-utils2.so.2 (0x00007ba501cfb000)
+	libz.so.1 => /lib/x86_64-linux-gnu/libz.so.1 (0x00007ba5017b6000)
+	libbsd.so.0 => /lib/x86_64-linux-gnu/libbsd.so.0 (0x00007ba5017a0000)
+	libsodium.so.23 => /lib/x86_64-linux-gnu/libsodium.so.23 (0x00007ba501749000)
+	libpgm-5.3.so.0 => /lib/x86_64-linux-gnu/libpgm-5.3.so.0 (0x00007ba501314000)
+	libnorm.so.1 => /lib/x86_64-linux-gnu/libnorm.so.1 (0x00007ba500ef5000)
+	libgssapi_krb5.so.2 => /lib/x86_64-linux-gnu/libgssapi_krb5.so.2 (0x00007ba500ea1000)
+	libmd.so.0 => /lib/x86_64-linux-gnu/libmd.so.0 (0x00007ba50173a000)
+	libkrb5.so.3 => /lib/x86_64-linux-gnu/libkrb5.so.3 (0x00007ba500b37000)
+	libk5crypto.so.3 => /lib/x86_64-linux-gnu/libk5crypto.so.3 (0x00007ba500b0b000)
+	libcom_err.so.2 => /lib/x86_64-linux-gnu/libcom_err.so.2 (0x00007ba501cf1000)
+	libkrb5support.so.0 => /lib/x86_64-linux-gnu/libkrb5support.so.0 (0x00007ba501307000)
+	libkeyutils.so.1 => /lib/x86_64-linux-gnu/libkeyutils.so.1 (0x00007ba501300000)
+	libresolv.so.2 => /lib/x86_64-linux-gnu/libresolv.so.2 (0x00007ba5012ee000)
+===
+54M	/home/lab/PX4-Autopilot/build/px4_sitl_default/bin
+836K	/home/lab/PX4-Autopilot/build/px4_sitl_default/etc
+456M	/home/lab/PX4-Autopilot/build/px4_sitl_default/rootfs
+total 54460
+drwxrwxr-x  2 lab lab     4096 Oct 29 15:29 .
+drwxrwxr-x 19 lab lab     4096 Oct 29 15:29 ..
+-rwxrwxr-x  1 lab lab 55746640 Oct 29 15:29 px4
+lrwxrwxrwx  1 lab lab        3 Oct 29 15:29 px4-actuator_test -> px4
+/home/lab/PX4-Autopilot/build/px4_sitl_default/bin/px4: ELF 64-bit LSB pie executable, x86-64, version 1 (GNU/Linux), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=6f808348a0044e48d5a3944f819c8322a1834a0d, with debug_info, not stripped
+91
+ldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39

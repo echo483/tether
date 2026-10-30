@@ -1,0 +1,46 @@
+PX4 stream source = ('127.0.0.1', 14556) (reply target), host socket = ('127.0.0.1', 14560)
+params: {'NAV_DLL_ACT': {'value': 0, 'type': 6}, 'COM_DL_LOSS_T': {'value': 10, 'type': 6}, 'COM_DLL_EXCEPT': {'value': 0, 'type': 6}}
+{
+ "px4_src": [
+  "127.0.0.1",
+  14556
+ ],
+ "bind": [
+  "localhost",
+  14560
+ ],
+ "params": {
+  "NAV_DLL_ACT": {
+   "value": 0,
+   "type": 6
+  },
+  "COM_DL_LOSS_T": {
+   "value": 10,
+   "type": 6
+  },
+  "COM_DLL_EXCEPT": {
+   "value": 0,
+   "type": 6
+  }
+ },
+ "rates": {
+  "baseline": {
+   "n": 177,
+   "window_s": 12.0,
+   "hz": 14.75
+  },
+  "after_1hz": {
+   "ack": 0,
+   "n": 11,
+   "window_s": 12.0,
+   "hz": 0.9166666666666666
+  },
+  "after_restore": {
+   "ack": 0,
+   "n": 177,
+   "window_s": 12.0,
+   "hz": 14.75
+  }
+ },
+ "verdict": "PASS"
+}

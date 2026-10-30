@@ -1,0 +1,13 @@
+{
+ "esp32_mode": 1,
+ "ssid": "TETHER-nighthack",
+ "wifi_chan": 11,
+ "gpio_tx": 19,
+ "gpio_rx": 18,
+ "gpio_rts": 0,
+ "gpio_cts": 0,
+ "baud": 115200,
+ "proto": 4,
+ "radio_dis_onarm": 0,
+ "rep_rssi_dbm": 1
+}

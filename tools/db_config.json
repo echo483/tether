@@ -1,0 +1,29 @@
+{
+  "_comment": "TETHER target config for DroneBridge for ESP32 v2.4.1 (generic esp32 flavour). Keys verified against v2.4.1 main/db_parameters.c and cross-checked with board 1's boot log (notes/evidence/board1-bootlog.txt). Keys starting with '_' are stripped by db_apply.sh. wifi_pass is a placeholder: db_apply.sh substitutes $TETHER_AP_PASS and refuses to send CHANGE_ME.",
+  "_tx_power": "NOT SETTABLE: v2.4.1 has no TX-power parameter (see notes/dronebridge.md). Mitigate with distance/shielding, not config.",
+  "_flow_control": "gpio_rts == gpio_cts disables HW flow control; pins are then left untouched (UART_PIN_NO_CHANGE).",
+  "_pins": "GPIO19=TX, GPIO18=RX: safe on WROOM and WROVER, same header side as TX0/RX0. TX must differ from RX, or the control module aborts and UDP 14550 / TCP 5760 never open (v2.4.1 db_serial.c L78, db_esp32_control.c L663-685).",
+  "esp32_mode": 1,
+  "proto": 4,
+  "ssid": "TETHER-nighthack",
+  "wifi_pass": "CHANGE_ME",
+  "wifi_chan": 11,
+  "_ap_ip_octets": [
+    192,
+    168,
+    2,
+    1
+  ],
+  "_ap_ip_note": "ap_ip is built at apply time from _ap_ip_octets (no dotted-quad literal stored; host tooling mangles them).",
+  "baud": 115200,
+  "gpio_tx": 19,
+  "gpio_rx": 18,
+  "gpio_rts": 0,
+  "gpio_cts": 0,
+  "trans_pack_size": 576,
+  "serial_timeout": 20,
+  "radio_dis_onarm": 0,
+  "rep_rssi_dbm": 1,
+  "wifi_en_gn": 0,
+  "_baud": "115200 by decision. 460800 and 921600 are selectable in v2.4.1 if the wire becomes the bottleneck."
+}

@@ -1,0 +1,10 @@
+[project]
+name = "tether"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pymavlink>=2.4.50",
+    "pyserial>=3.5",
+]

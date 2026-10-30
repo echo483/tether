@@ -1,0 +1,16 @@
+L=2300 B/s  tiers T0/T1/T2 = 889/519/893 B/s  C_lo=1600  K=3200 B  arithmetic: fill≈4.6s  stale≈2.0s
+U0: picture age p50 2.10±0.00s  p99 2.24±0.02s  (n=10 seeds)  >1s 90±0% of squeeze  first >1s at +3.0s
+ M: picture age p50 0.10±0.01s  p99 1.10±0.05s  (n=10 seeds)  >1s 4±2% of squeeze  first >1s at +3.0s
+boundary sweep, arm M (fails = picture >1 s old for more than half the squeeze):
+  C_lo=  500 B/s  p50=2.11s  stale  95%  FAILS
+  C_lo=  600 B/s  p50=2.10s  stale  95%  FAILS
+  C_lo=  700 B/s  p50=2.07s  stale  95%  FAILS
+  C_lo=  800 B/s  p50=2.07s  stale  95%  FAILS
+  C_lo=  900 B/s  p50=2.03s  stale  94%  FAILS
+  C_lo= 1000 B/s  p50=0.92s  stale  47%  holds
+  C_lo= 1100 B/s  p50=0.15s  stale  23%  holds
+  C_lo= 1200 B/s  p50=0.24s  stale  11%  holds
+  C_lo= 1300 B/s  p50=0.31s  stale  10%  holds
+  C_lo= 1400 B/s  p50=0.26s  stale   5%  holds
+  C_lo= 1500 B/s  p50=0.12s  stale   5%  holds
+  C_lo= 1600 B/s  p50=0.10s  stale   3%  holds

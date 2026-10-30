@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# ssh into the dronelab VM (passt TCP portForward host 2222 -> guest 22)
+exec ssh -4 -p 2222 -i "$HOME/.ssh/drone_lab_ed25519" -o StrictHostKeyChecking=accept-new \
+  -o BatchMode=yes -o ConnectTimeout=8 lab@localhost "$@"

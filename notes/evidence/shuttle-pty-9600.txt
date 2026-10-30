@@ -1,0 +1,14 @@
+shuttle output (first 3 / last 2):
+  shuttle: udp localhost:14561 <-> /dev/pts/4 @9600 hold_reset=True K=2048B
+  shuttle: PX4 peer = ('127.0.0.1', 14557)
+  px4->ser rx 2515 tx 960 B | ser->px4 0 B (nopeer 0) | q 1545 B/38 dg | drops 0 dg 0 B | kq 0 B
+  ...
+  px4->ser rx 14109 tx 5767 B | ser->px4 27 B (nopeer 0) | q 2016 B/49 dg | drops 156 dg 6315 B | kq 0 B
+  px4->ser rx 16439 tx 6727 B | ser->px4 27 B (nopeer 0) | q 1992 B/48 dg | drops 191 dg 7698 B | kq 0 B
+pty master received 7661 B in 8.0s (957 B/s); BAD_DATA=0
+  HEARTBEAT: n=2
+  ATTITUDE: n=38
+  SYS_STATUS: n=0
+  GLOBAL_POSITION_INT: n=29
+  distinct msg types=19; PARAM_VALUE(NAV_DLL_ACT) via serial->PX4->serial: ('NAV_DLL_ACT', 0.0, 6, 3.95)
+VERDICT: PASS
