@@ -7,8 +7,9 @@ Live, no slides, 2:00. Rehearse ×3 at 21:15. Numbers in ⟨brackets⟩ are fill
 - Laptop 1: QGC left half, `dash.py` right half — giant **PICTURE AGE** number (green < 0.5 s,
   red > 1 s), 30 s trace, tier strip, an **"impairment: synthetic, seeded"** label whenever the
   squeeze is active.
-- Board 1 (the radio) on a stand ~1.5 m away, powered from its own power bank, next to an open
-  metal tin. Board 3 (the adapter) taped to the breadboard beside the laptop.
+- The breadboard (board 1 = radio, board 3 = adapter, 4 jumpers) taped to cardboard as far from the
+  laptop as board 3's USB cable allows; board 1 on its own power bank; the shield prop that passed the
+  shield test (tin / foil) beside it. See PHYSICAL.md.
 - A printed disclosure card (below) and a card with the pre-registered prediction.
 
 ## Run sheet
