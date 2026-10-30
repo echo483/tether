@@ -86,11 +86,28 @@ Boards on a non-conductive surface, never on an aluminium laptop.
 
 1. SITL emits MAVLink; the host shuttle can read it — **software only**
 2. The host can write down the serial port to board 1 — *the only step the adapter route affects*
-3. Board 1 carries it over RF; laptop 2 joins the AP and receives UDP — **one config, testable alone**
+3. Board 1 carries it over RF; the ground station joins the AP and receives UDP — **one config, testable alone**
 4. QGC renders it — **GCS only**
 
 Do 1, 3 and 4 first: they need no adapter decision at all, and they prove T1 is reachable before
 you commit to a harness.
+
+**⭐ T1a comes before all of it, and needs no adapter, no jumpers, no laptop.**
+DroneBridge *injects its own heartbeat and RADIO_STATUS in MAVLink mode* so it can register with a
+GCS. So: flash board 1, power it, join the AP from a **phone** running QGC — and a vehicle appears
+with no autopilot in the loop at all. That proves the radio, the AP, the UDP path and the GCS in
+about 30 minutes, and it is the bulk of the risk.
+
+**T1b** is the same chain with PX4 feeding the FC UART through the adapter.
+
+**Confirmed from DroneBridge's own docs — do not attempt either of these:**
+- Configuring the FC UART onto GPIO1/3 **crashes the device.** The firmware will not re-assign
+  UART0. So board 1's own USB can never be the flight-controller link.
+- `noUARTConsole` firmware is **not published for the ESP32 (Classic)**, so the onboard USB-UART
+  cannot be freed either. An external USB-UART on the air side is mandatory.
+
+**Use the official online flasher — `https://drone-bridge.com/flasher/`** in Chrome. No toolchain,
+no esptool, no `dialout`. That deletes two failure modes at once.
 
 ---
 
