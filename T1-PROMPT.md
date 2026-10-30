@@ -65,11 +65,26 @@ This is the highest-value 30 minutes available. It needs one board, one USB cabl
    and the web-UI password away from the defaults. Record where the new one is kept — **not in
    this repo.**
 6. Set the channel to a clearly unused one. Leave TX power low.
-7. **Install QGC on the phone:** `https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl.apk`
-   (Android 9+).
-8. Join the phone to the DroneBridge AP. **Turn mobile data OFF first** — the DroneBridge docs
-   warn the phone will otherwise route over cellular and you will see nothing.
-9. Open QGC and let it auto-connect on UDP 14550.
+7. **Use laptop 1 as the GCS — no phone needed.** Install the QGC AppImage:
+   `https://d176tv9ibo4jno.cloudfront.net/latest/QGroundControl-x86_64.AppImage`, `chmod +x`, run
+   it. `libfuse2t64` is already installed, so it should launch directly.
+   **Do not chase QGC on iOS.** The project states iOS "is no longer supported as a standard
+   build", daily builds list "iOS currently unavailable", and the old TestFlight beta is closed.
+   Android and the three desktop platforms only.
+8. Power board 1 from a **USB wall charger or power bank, not from the laptop.** In AP mode it
+   needs power and nothing else. That keeps the board and the GCS as genuinely separate devices,
+   which is what makes the RF path meaningful instead of a loopback through one machine.
+9. Put laptop 1 on the DroneBridge AP using its **free WiFi radio `wlp0s20f3`** — currently DOWN
+   and unused. The Ethernet interface keeps the internet, so both work simultaneously:
+   `nmcli dev wifi connect "<SSID>" password "<pw>" ifname wlp0s20f3`
+   **Check Mullvad.** It is connected with **Lockdown Mode ON**. Lockdown Mode blocks traffic
+   outside the tunnel; LAN Sharing is reportedly enabled, which should permit the AP's subnet, but
+   verify it. If QGC cannot reach the AP's gateway, that is the first thing to suspect — not the
+   radio. Also confirm `ip route` still sends the default route via Ethernet and only
+   `192.168.2.0/24` goes via `wlp0s20f3`.
+10. Open QGC and let it auto-connect on UDP 14550. If it does not, add a manual **UDP** link to
+    the AP gateway on port 14550. Note that a UDP GCS must send at least one packet to register as
+    an endpoint — QGC does this automatically, but it is why a one-way-only test can look dead.
 
 **PASS CRITERION:** QGC shows a connected vehicle. In MAVLink mode DroneBridge injects its own
 heartbeat and RADIO_STATUS, so this proves the radio, the AP, the UDP path and the GCS **without

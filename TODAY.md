@@ -92,11 +92,16 @@ Boards on a non-conductive surface, never on an aluminium laptop.
 Do 1, 3 and 4 first: they need no adapter decision at all, and they prove T1 is reachable before
 you commit to a harness.
 
-**⭐ T1a comes before all of it, and needs no adapter, no jumpers, no laptop.**
+**⭐ T1a comes before all of it, and needs no adapter, no jumpers, no second laptop.**
 DroneBridge *injects its own heartbeat and RADIO_STATUS in MAVLink mode* so it can register with a
-GCS. So: flash board 1, power it, join the AP from a **phone** running QGC — and a vehicle appears
-with no autopilot in the loop at all. That proves the radio, the AP, the UDP path and the GCS in
-about 30 minutes, and it is the bulk of the risk.
+GCS. So: flash board 1, **power it from a wall charger**, put laptop 1 on the AP via its **free
+WiFi radio `wlp0s20f3`**, and run QGC — a vehicle appears with no autopilot in the loop at all.
+That proves the radio, the AP, the UDP path and the GCS in about 30 minutes, and it is the bulk of
+the risk.
+
+**Do not chase QGC on iOS.** The project states iOS "is no longer supported as a standard build"
+and daily builds list "iOS currently unavailable". Android and desktop only — so laptop 1 is the
+test GCS, not the iPhone.
 
 **T1b** is the same chain with PX4 feeding the FC UART through the adapter.
 
