@@ -5,96 +5,121 @@ Nothing here is sprint work. Tonight buys you a calm Friday.
 
 **Do not tonight:** flash DroneBridge, wire anything, or attempt a radio link. Those are tomorrow.
 
+**Where things run** (see `SPEC.md` §11): **VM = PX4 SITL only.** **Host = everything we build**,
+including `/dev/ttyUSB0`. **Device 2 = QGC over the radio's AP.** No USB passthrough.
+
 ---
 
 ## 0. Before anything else — 5 minutes
 
 - [ ] **Submit the hardware review to the organisers.**
       Two USB-powered ESP32s, no LiPo, no props, no soldering. Declare the 2.4 GHz radios.
-      *This is the only item on this page that can disqualify you.* Do it first.
+      *The only item on this page that can disqualify you.* Do it first.
 
 ---
 
-## 1. The VM boots and PX4 runs
+## 1. The host repo — proper deps, hit the ground running
 
-The VM is `dronelab`, currently shut off. 8 vCPU / 12 GB / 120 GB, SSH on
-`[IP_ADDRESS]:2222` with `~/.ssh/drone_lab_ed25519`. PX4 is **already built** —
-`bin/px4` exists and the build log ends `rc=0`.
+New repo on the host. You have `uv`; use it. Deps are deliberately tiny — **pymavlink, pyserial,
+esptool** — because every extra package is a tomorrow-morning failure mode.
+
+```
+tether/
+  pyproject.toml          # or requirements.txt + uv.lock
+  tether/
+    link.py               # SITL <-> serial shuttle                        (T0/T1)
+    inject.py             # fault injector: delay/loss/corrupt/blackout    (T2)
+    manager.py            # link estimation, rate adaptation, priority     (T3)
+    radio.py              # RADIO_STATUS parsing, SET_MESSAGE_INTERVAL     (T3)
+    dash.py               # live numbers, for the demo
+  notes/                  # the pin map from item 6 goes here
+```
+
+```sh
+uv venv && uv pip install pymavlink pyserial esptool
+uv run python -c "import pymavlink, serial; print('ok')"
+```
+
+- [ ] Repo created, venv up, imports verified
+- [ ] **Pass criterion:** `import pymavlink, serial` succeeds inside the venv
+
+## 2. The VM boots and PX4 runs
+
+VM `dronelab`, currently shut off. 8 vCPU / 12 GB / 120 GB, SSH on `[IP_ADDRESS]:2222`, key
+`~/.ssh/drone_lab_ed25519`. PX4 is **already built** — the build log ends `rc=0`.
 
 ```sh
 LIBVIRT_DEFAULT_URI=qemu:///session virsh start dronelab
 ssh -p 2222 -i ~/.ssh/drone_lab_ed25519 lab@[IP_ADDRESS]
 ```
 
-- [ ] VM boots; SSH works
-- [ ] `~/PX4-Autopilot/build/px4_sitl_default/bin/px4` exists
-- [ ] **Pass criterion:** PX4 SITL starts and the console shows a vehicle booting.
-      Confirm the actual make target for this build — `px4_sitl` may default to Gazebo, which
-      is heavier than we need. **SIH is the lighter target and is enough for a MAVLink source.**
-      Write down the exact command that works.
+- [ ] VM boots; SSH works; `build/px4_sitl_default/bin/px4` exists
+- [ ] **Pass criterion:** SITL starts and the console shows a vehicle booting.
+      **Write down the exact command that works** — `px4_sitl` may default to Gazebo, which is
+      heavier than we need. SIH is the lighter target and supplies the same MAVLink.
 
-## 2. MAVLink is on the wire
+## 3. The one integration point — guest → host MAVLink
 
-- [ ] Confirm SITL is emitting MAVLink (the console usually reports the UDP port, typically 14550)
-- [ ] Watch packets arrive — `mavproxy.py` or `pymavlink` is enough to prove it tonight
-- [ ] **Pass criterion:** you can see a heartbeat and an attitude message with your own eyes
+The only nontrivial hop in the topology, so prove it tonight.
 
-*(pymavlink/pyserial are not installed on this host. Install them where you'll work — in the VM.)*
+- [ ] From the guest, point SITL's MAVLink at the **host's gateway address** (under `passt` the
+      host is the gateway — same idea as slirp's [IP_ADDRESS])
+- [ ] On the host, listen with `mavproxy.py` or a 10-line `pymavlink` script
+- [ ] **Pass criterion:** the host sees heartbeats, **and** something sent from the host lands in
+      the guest. SITL's continuous stream should keep the NAT mapping alive so the return path
+      needs no port forwards — **confirm that, don't assume it**
 
-## 3. QGroundControl
+If the return path fails: add a UDP `portForward` to the VM's passt network and restart. A known
+fallback, not a blocker.
 
-- [ ] Install QGC. AppImage is fine — you already use that pattern (`~/Applications/`).
-- [ ] Connect it to SITL over plain UDP — **no radios involved**
-- [ ] **Pass criterion:** QGC shows the simulated vehicle moving, with telemetry on screen
+## 4. QGroundControl
 
-Decide where QGC lives for the **demo**: ideally a second physical device (phone/tablet). For
-tonight, wherever is fastest. Note: `passt` user-mode networking means the VM **cannot join a
-WiFi AP** — so at the event the VM reaches the radio over USB and the second device joins the
-radio's AP.
+- [ ] Install QGC — AppImage on the host, or the Android build on the second device
+- [ ] Connect it to SITL — **no radios involved**
+- [ ] **Pass criterion:** QGC shows the simulated vehicle with live telemetry
 
-## 4. The ESP32 — identify it, don't flash it
+For the **demo**, QGC lives on the second device over the radio's AP. Tonight, wherever is
+fastest — the goal is just to know the install works.
 
-A CP2102 DevKit is at `/dev/ttyUSB0`.
+## 5. The ESP32 — identify it, don't flash it
+
+A CP2102 DevKit sits at `/dev/ttyUSB0`.
 
 ```sh
-pipx install esptool        # or: pip install --user esptool
-esptool.py --port /dev/ttyUSB0 chip_id
+uv run esptool.py --port /dev/ttyUSB0 chip_id
 ```
 
-- [ ] Chip identified (expect classic ESP32)
-- [ ] Flash size and MAC recorded
-- [ ] **Pass criterion:** esptool talks to the board and reports a chip. That proves USB, driver,
-      and cable — the three things that waste an hour tomorrow if broken.
+- [ ] Chip identified (expect classic ESP32); flash size and MAC recorded
+- [ ] **Pass criterion:** esptool talks to the board. That proves USB, driver, and cable — the
+      three things that waste an hour tomorrow if broken
 
-## 5. The one piece of research that de-risks tomorrow
+## 6. The research that de-risks tomorrow — write it down
 
-Open the DroneBridge repo/wiki and answer, **in writing**:
+Open the DroneBridge repo/wiki and answer **in writing**, into `notes/`:
 
-- [ ] Which **GPIOs does the classic-ESP32 DroneBridge build use for the flight-controller UART?**
-- [ ] Is there a prebuilt classic-ESP32 binary, and which variant (the docs say `noUARTConsole`
-      is *not* available for classic ESP32)?
+- [ ] Which **GPIOs does the classic-ESP32 build use for the flight-controller UART?**
+- [ ] Is there a prebuilt classic-ESP32 binary — and which variant, given the docs say
+      `noUARTConsole` is *not* available for classic ESP32?
 - [ ] Which pins does the build reserve for the console?
 
-**Pass criterion:** you know the exact TX/RX GPIO numbers for the FC link before you pick up a
-jumper wire tomorrow. Docs warn that GPIO16-17 are flagged on some modules — don't assume.
+**Pass criterion:** you know the exact TX/RX GPIO numbers before you pick up a jumper wire
+tomorrow. The docs flag GPIO16-17 on some modules — don't assume.
 
 ---
 
 ## Tomorrow morning — 4 hours, the heavier setup
 
-This is prep, not sprint work. The judges score the sprint.
+Prep, not sprint work. The judges score the sprint.
 
 1. Flash DroneBridge on **two** boards. Verify the web UI (`DroneBridge ESP32` /
    `dronebridge.local` / password `dronebridge`).
-2. **USB passthrough** the ESP32 into the VM. Verify `/dev/ttyUSB0` inside the guest.
-3. Build the **serial shuttle**: SITL's MAVLink UDP ↔ the ESP32's serial, using the **second
-   UART on the GPIOs from item 5.** If you have no USB-TTL adapter, flash the third V1 as a
-   USB↔UART passthrough.
-4. Wire it. Power it. Do not let the magic smoke out — check 3.3 V, not 5 V.
-5. **GATE T1: a QGC heartbeat arriving over real RF.** This is the whole morning's objective.
-6. Stand up the second device as the GCS.
-7. **Build the fault injector skeleton** — even a crude delay/drop injector against a loopback.
-   It unblocks everything, and it's the instrument you measure with.
+2. Build the **serial shuttle** (`link.py`): SITL's MAVLink UDP ↔ the ESP32's serial, on the
+   GPIOs from item 6. No USB-TTL adapter? Flash the third V1 as a USB↔UART passthrough.
+3. Wire it. **3.3 V, not 5 V.**
+4. **GATE T1: a QGC heartbeat arriving over real RF.** That's the morning's whole objective.
+5. Stand up the second device as the GCS — QGC over the radio's AP.
+6. **Build the fault injector skeleton** (`inject.py`) — even crude, against a loopback. It
+   unblocks everything, and it's the instrument you measure with.
 
 ---
 
@@ -105,5 +130,5 @@ The manager, the measurements, the demo. See `SPEC.md` §7–§10.
 **Order of work:** link state estimation → rate adaptation → prioritization → fault injector →
 store-and-forward → failover → the 30-run sweep.
 
-**If you only get half of it done:** estimator + rate adaptation + the sweep. That's T0–T3, which
-is a complete result and a real demo.
+**If you only get half of it done:** estimator + rate adaptation + the sweep. That's T0–T3 — a
+complete result and a real demo.

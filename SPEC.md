@@ -75,21 +75,30 @@ improve what they cannot measure.
 ## 6. Architecture
 
 ```
-   ┌──────────────────────────── the VM ────────────────────────────┐
-   │  PX4 SITL ──MAVLink(UDP)──▶ TETHER link manager ──serial──▶ ... │
-   │  (real autopilot,           · link state estimation            │
-   │   simulated airframe)       · rate adaptation                  │
-   │                             · prioritization                   │
-   │                             · store-and-forward                │
-   │                             · failover                         │
-   │                             · fault injector                   │
-   └──────────────────────────────┬─────────────────────────────────┘
-                                  │ USB (passthrough)
-                            ┌─────▼─────┐   RF    ┌───────────┐
-                            │ ESP32 #1  │~~~~~~~~▶│ ESP32 #2  │──▶ QGC
-                            │DroneBridge│         │DroneBridge│   (device 2)
-                            └───────────┘         └───────────┘
+   ┌──────────── VM — simulator appliance ────────────┐
+   │   PX4 SITL  ──(real autopilot, sim airframe)     │
+   └───────────────────┬──────────────────────────────┘
+                       │  MAVLink over UDP
+                       │  guest → host. The telemetry stream is continuous, so the NAT
+                       │  mapping stays alive and the host replies along the same path.
+                       │  No port-forward gymnastics required.
+   ┌───────────────────▼──────────────────────────────┐
+   │  HOST — everything we build                       │
+   │                                                   │
+   │   TETHER link manager                             │
+   │     · link state estimation   ──serial──▶ ESP32 #1 ──RF──▶ QGroundControl
+   │     · rate adaptation                     └──────────┐     (device 2)
+   │     · prioritization                                 └──▶ ESP32 #2
+   │     · store-and-forward                                   (path B / ESP-NOW)
+   │     · failover                                            │
+   │     · fault injector                                      ▼
+   │                                                    second device / 2nd NIC
+   └───────────────────────────────────────────────────┘
 ```
+
+**The boundary is drawn at the one place a split is natural:** a separate machine running a
+simulator. The VM is a simulator appliance. All of *our* code lives in one host repo. There is
+exactly one integration point — guest → host MAVLink — and it is small, testable, and continuous.
 
 **Real:** the radio, the encryption, the packet loss, the autopilot (PX4), the GCS (QGC).
 **Simulated:** the airframe. This is hardware-in-the-loop **on the comms path** — a standard
@@ -220,9 +229,25 @@ flashed build's pin map — don't assume a generic tutorial's numbers.
 - (a) a USB-TTL adapter (~$10, in person only)
 - (b) **a third V1 flashed as a USB↔UART passthrough** — ~20 lines, zero purchases
 
-**Everything runs in the VM.** No host/VM split. That requires **USB passthrough** of the ESP32
-into the VM. Note: `passt` user-mode networking means the guest **cannot associate with a WiFi
-AP** — so the VM reaches the radio over USB, and the second device (QGC) joins the radio's AP.
+### Where things run — decided
+
+| | Runs | Why |
+|---|---|---|
+| **VM** | PX4 SITL only | Already built. Ubuntu-only toolchain — do **not** rebuild on the host |
+| **Host** | shuttle, link manager, fault injector, dashboard | Owns `/dev/ttyUSB0`. **No USB passthrough** |
+| **Device 2** | QGroundControl over the radio's AP | Makes the radio genuinely inter-device |
+
+**Why not everything in the VM:** USB passthrough is one more failure mode, and the guest cannot
+join a WiFi AP under `passt` anyway.
+
+**Why not everything on the host:** PX4's toolchain script is Ubuntu-only; a Debian 13 build is a
+1–3 hour gamble on an unsupported path. The VM already has `bin/px4` built. Keep it.
+
+**The single integration point** is guest → host MAVLink over UDP. The guest streams continuously,
+so the NAT mapping stays alive and the host replies along the same path. No port forwards needed.
+
+**Failover consequence:** a phone cannot reach two paths. If failover is in, the GCS must be a
+laptop with two interfaces (built-in WiFi + a USB dongle). Still the most cuttable feature.
 
 ---
 
@@ -231,9 +256,9 @@ AP** — so the VM reaches the radio over USB, and the second device (QGC) joins
 | Risk | Mitigation |
 |---|---|
 | Classic ESP32 pin/console limits | Verify the build's UART pins tonight. Passthrough-board fallback for serial |
-| VM cannot join a WiFi AP (passt) | USB passthrough the ESP32 into the VM; GCS on a second physical device |
+| Guest → host MAVLink hop | Test it tonight — it's the only integration point. SITL's continuous stream keeps the NAT mapping alive |
 | Default streams already saturate the link | Characterize the baseline first — that **is** the control condition |
-| Failover mechanism unclear | Don't let it block L0–L3; decide after reading DroneBridge's API |
+| Failover mechanism unclear | Needs a two-interface GCS. Don't let it block T0–T3 |
 | "You just flashed someone's firmware" | Lead with the manager + the numbers. §1 is the answer |
 | Scope creep into flight/autonomy | Stay on the link. PX4 is a vehicle, not a project |
 | Venue RF congestion | Pick a clear channel; never touch the venue network |
