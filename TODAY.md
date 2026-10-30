@@ -40,11 +40,34 @@ No purchased part is required if you own the jumpers.
 
 ---
 
-## Wiring schematic
+## Wiring — decide the adapter route BEFORE you wire anything
+
+**Path 1 (preferred): no jumpers, no soldering, no board 3.**
+The DevKit's CP2102 is wired to GPIO1(TX)/GPIO3(RX). If DroneBridge lets you configure its FC
+UART, set **TX=GPIO1, RX=GPIO3** — the GPIO matrix takes those pins off the UART0 console, so
+**board 1's own USB becomes the serial link.** Nothing else needed. Risks: the web UI may refuse
+GPIO1/3; the boot ROM prints garbage for ~100 ms; DTR/RTS can reset the board on open.
+
+**Path 2: solder it.** Normal practice; a pin-to-wire joint on a header is not a hack.
 
 ```
-  LAPTOP 1 ──USB──▶ [BOARD 3  — held in RESET, = plain USB-UART]
-                      EN ── GND
+BOARD 3  (EN tied low → dedicated adapter)
+   EN ───solder─── GND            ← 2 joints, permanent, certain. Do this first.
+   TX0 ───wire───▶ board1 FC_RX   ← 3 joints, ONLY after the research names the FC UART GPIOs
+   RX0 ───wire───◀ board1 FC_TX
+   GND ───wire──── board1 GND
+```
+
+Cut a male-to-male jumper in half and use the halves as wire. **Never solder the TX/RX wires
+before you know board 1's FC UART GPIOs** — desoldering under a hackathon clock is misery.
+
+**Path 3: the breadboard.** Fine for holding boards and strain relief, but a DevKit V1 is too wide
+to reliably straddle a standard breadboard's two banks. Don't bet the harness on it.
+
+**Path 4: one 3.3 V USB-TTL adapter.** A single purchase that deletes the problem.
+
+```
+  LAPTOP 1 ──USB──▶ [BOARD 3 — held in RESET = plain USB-UART]   ...OR board 1 direct (Path 1)
                       TX0 (GPIO1) ────────────▶ FC-RX  (board 1, per DroneBridge config)
                       RX0 (GPIO3) ◀──────────── FC-TX  (board 1)
                       GND ───────────────────── GND
@@ -59,8 +82,15 @@ No purchased part is required if you own the jumpers.
 **Rules:** GND / TX / RX only. **Never** tie 5V or 3V3 between two USB-powered boards. 3.3 V logic.
 Boards on a non-conductive surface, never on an aluminium laptop.
 
-**Before wiring board 1:** jumper board 3's TX0↔RX0 and echo-test. If no echo, the adapter route is
-dead — buy a USB-TTL adapter instead of burning sprint time.
+### T1 decomposes into four independent checks
+
+1. SITL emits MAVLink; the host shuttle can read it — **software only**
+2. The host can write down the serial port to board 1 — *the only step the adapter route affects*
+3. Board 1 carries it over RF; laptop 2 joins the AP and receives UDP — **one config, testable alone**
+4. QGC renders it — **GCS only**
+
+Do 1, 3 and 4 first: they need no adapter decision at all, and they prove T1 is reachable before
+you commit to a harness.
 
 ---
 
