@@ -22,7 +22,7 @@ until tools/vmssh true 2>/dev/null; do sleep 3; done; echo VM up
 tools/vmssh 'bash -s' < tools/guest_px4_sih.sh
 
 # 3. check from the host: HEARTBEAT ~1 Hz and ATTITUDE ~15 Hz from source localhost:14556
-~/.local/bin/uv run python tools/mavframes.py 14560 10
+~/.local/bin/uv run python tools/mavframes.py 14601 10
 ```
 
 What `tools/guest_px4_sih.sh` runs inside the guest (manual equivalent):
@@ -34,7 +34,7 @@ tmux new-session -d -s px4 -x 200 -y 50 \
   "cd $PWD && PX4_SIM_MODEL=sihsim_quadx ../bin/px4 -i 0 2>&1 | tee /tmp/px4-sih.log"
 sleep 10   # until /tmp/px4-sih.log shows "Startup script returned successfully" / "Ready for takeoff!"
 GW=$(ip route | awk '/default/{print $3; exit}')
-../bin/px4-mavlink start -u 14556 -o 14560 -t "$GW" -r 400000     # TETHER instance (Normal mode)
+../bin/px4-mavlink start -u 14556 -o 14601 -t "$GW" -r 400000     # TETHER instance (Normal mode)
 ```
 
 Notes:
@@ -59,7 +59,7 @@ Notes:
 | #2 | Onboard | 14280 | guest localhost:14030 | — | payload |
 | #3 | Gimbal | 13030 | guest localhost:13280 | — | **stopped** to free a slot |
 | #4 | Custom (SIH display) | 19450 | guest localhost:19410 | — | HIL_* to SIH viewer |
-| #5 | Normal, -r 400000 | 14556 | guest gateway:14560 | localhost:14560 (src localhost:14556) | **TETHER shuttle** |
+| #5 | Normal, -r 400000 | 14556 | guest gateway:14601 | localhost:14601 (src localhost:14556) | **TETHER shuttle** |
 | #6 | Normal, -r 400000 | 14557 | guest gateway:14561 | localhost:14561 (src localhost:14557) | census / pty-test clone |
 | — | TCP portForward | guest 22 | — | localhost:2222 | ssh |
 
@@ -70,10 +70,10 @@ host replies to that source go back to the PX4 instance (verified; no UDP portFo
 
 ```bash
 ~/.local/bin/uv run python tools/shuttle_passthrough.py --dev /dev/serial/by-path/<adapter> \
-    --port 14560 --baud 115200            # --no-hold-reset for a non-ESP32 adapter
+    --port 14601 --baud 115200            # --no-hold-reset for a non-ESP32 adapter
 ~/.local/bin/uv run python tools/test_shuttle_pty.py --port 14561   # pty self-test, no hardware
 ```
-Only one process can own host UDP 14560: do not run QGC with a UDP link on 14560 at the same time
+Only one process can own host UDP 14601 (the shuttle). QGC owns 14560 (fed by the ground relay).
 (a QGC instance was bound there during this session). For QGC on the host directly against SITL,
 give QGC a UDP link on port 14561 (the clone) instead.
 

@@ -103,3 +103,11 @@ free the 6-instance limit. QGC for the demo should stay on 14550 (WLAN/DroneBrid
 ## State left
 VM `dronelab` running; PX4 SIH running in guest tmux `px4` with instances #5 (14556->14560) and #6
 (14557->14561) active; no native PX4 process; no host processes left running by me.
+
+## Addendum (parent, 12:50) — port map v2 supersedes the ports above
+Instance #5 now sends to host **localhost:14601** (`TETHER_REMOTE` default in `tools/guest_px4_sih.sh`), so QGC
+can own 14560 behind the ground relay. Verified: `mavframes.py 14601 5` receives the stream after the restart.
+Offline check of passt (run in an empty user+net namespace): "No external interface as template, switch to
+local mode", DHCP assigns 169.254.2.1 with router 169.254.2.2 = NAT to host loopback. The gateway-computed
+guest script therefore works with no network at all; native-host PX4 (phase E) is not needed. Full cold-start
+offline drill still to be run by the user (it disconnects the agent).

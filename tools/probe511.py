@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """cmd 511 probe: MAV_CMD_SET_MESSAGE_INTERVAL through the SAME UDP socket that receives PX4's stream.
 
-    uv run python tools/probe511.py [--bind localhost] [--port 14560] [--window 12]
+    uv run python tools/probe511.py [--bind localhost] [--port 14601] [--window 12]
 
 Steps: learn PX4's source addr from first datagram -> PARAM_REQUEST_READ (return-path proof +
 failsafe params) -> baseline ATTITUDE rate -> 511(msg 30, 1e6 us) + ACK -> measure -> 511(msg 30, 0 =
@@ -19,7 +19,7 @@ from mavframes import split_frames
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--bind", default="localhost")
-ap.add_argument("--port", type=int, default=14560)
+ap.add_argument("--port", type=int, default=14601)
 ap.add_argument("--window", type=float, default=12.0)
 ap.add_argument("--settle", type=float, default=2.0)
 ap.add_argument("--msgid", type=int, default=30)
