@@ -5,14 +5,20 @@ Two people build against this file and do not negotiate after it is frozen.
 Census-driven tier lists are filled from `notes/census.md`.
 
 ## 1. Port map (single host)
+All constants live in `tools/tnet.py` — import it, never retype ports or addresses.
 | Who | Binds | Talks to | Notes |
 |---|---|---|---|
-| PX4 SIH, GCS mavlink instance | its own | air.py `[IP_ADDRESS]:14550` | see notes/sitl.md for the exact instance |
-| air.py (radio side) | serial `/dev/serial/by-path/…` | board 3 → board 1 UART | baud must equal DroneBridge's |
-| air.py control | `[IP_ADDRESS]:14599/udp` | — | JSON lines in, see §4 |
-| ground.py radio side | `wlp0s20f3`, ephemeral | DroneBridge `[IP_ADDRESS]:14550` | sends first (DroneBridge only talks to clients it has heard from) |
-| ground.py GCS side | `[IP_ADDRESS]` ephemeral | QGC `[IP_ADDRESS]:14560` | QGC uplink comes back on the same socket and is forwarded up the radio |
-| QGC | `14560/udp` | — | UDP + serial autoconnect **off** (never grabs 14550 or the tty) |
+| PX4 SIH, TETHER mavlink instance (#5, Normal, guest udp 14556) | guest | host `localhost:14601` via passt gateway | `tools/guest_px4_sih.sh`; cmd 511 must go back through air.py's socket (per-instance) |
+| air.py radio side | `localhost:14601` + serial `/dev/serial/by-path/…` (board 3) | board 1 UART, **115200** | DroneBridge baud = 115200 (set + read back) |
+| air.py control | `localhost:14599/udp` | — | JSON lines in, see §4 |
+| ground.py radio side | `0.0.0.0:14550` | DroneBridge `192.168.2.1:14550` | DroneBridge auto-pushes to `<laptop wifi ip>:14550` after DHCP; uplink goes from the same socket |
+| ground.py GCS side | `localhost`, ephemeral | QGC `localhost:14560` | QGC uplink comes back on that socket → forwarded up the radio |
+| QGC | `14560/udp` (link `TETHER-ground`) | — | UDP + serial (SiK!) autoconnect **off** — QGC treats every CP2102 as a SiK radio |
+
+DroneBridge packs several MAVLink frames per UDP datagram (≤576 B or 20 ms idle): parse the
+byte stream (`mavutil.mavlink.MAVLink.parse_buffer`), never assume one message per datagram.
+DroneBridge injects its own HEARTBEAT/RADIO_STATUS as sysid 1 **compid 68** — exclude compid 68
+from every metric. Census source (instance #5): L = 2300 B/s, tiers T0/T1/T2 = 889/519/893 B/s.
 
 ## 2. Logs — JSONL, one object per line, `logs/<run_id>/<proc>.jsonl`
 `run_id` = `YYYYmmdd-HHMMSS-<arm>-<seed>`; arm ∈ `U0` (no manager) · `U1` (static rate) · `M` (TETHER).

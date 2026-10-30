@@ -38,22 +38,16 @@ screen only if it runs `ground.py` + QGC cleanly by 19:30.
 - **30 paired runs, U1 as a full arm, bootstrap, emulator-vs-UART validation** — n=10 paired fits in 15 min; U1 = one run.
 - **LLM in the control loop** — 1–3 s per call vs a 200 ms loop, and it dies with the internet.
 
-## Port map (confirm against notes/T0-REPORT.md)
-| Socket | Bind | Peer |
-|---|---|---|
-| PX4 GCS instance | PX4 | → air.py 127.0.0.1:14550 |
-| air.py serial | /dev/serial/by-path/… (board 3) | 460800 or 115200, set = DroneBridge |
-| ground.py radio side | wlp0s20f3 ephemeral | ↔ 192.168.2.1:14550 (registers by sending first) |
-| ground.py GCS side | 127.0.0.1 | → QGC 127.0.0.1:14560 |
-| QGC | UDP 14560, autoconnect OFF | — |
+## Port map
+See CONTRACT.md §1 and `tools/tnet.py` (PX4 → air.py localhost:14601 · DroneBridge ↔ ground :14550 · ground → QGC localhost:14560).
 
 ## Harness (board 3 held in reset = plain USB-UART)
 With board 3's ESP32 in reset its header labels are the dead chip's view, so wire **same-to-same**:
 ```
 board3 EN  ── board3 GND          (hold in reset)
-board3 RX0 ──▶ board1 GPIO16 (DroneBridge UART RX)   ← laptop data out
-board3 TX0 ◀── board1 GPIO17 (DroneBridge UART TX)   ← radio data in
+board3 RX0 ──▶ board1 D18 (DroneBridge gpio_rx=18)   ← laptop data out
+board3 TX0 ◀── board1 D19 (DroneBridge gpio_tx=19)   ← radio data in
 board3 GND ─── board1 GND          (never 5V / 3V3)
 ```
 The TX0↔RX0 loopback test passes regardless of this mapping — it cannot catch a swap.
-Can marked WROVER (PSRAM on 16/17)? → set TX=33 / RX=32 and wire to those instead.
+18/19 are safe on WROOM and WROVER, so the module marking no longer matters. Configured + read back on board 1.
