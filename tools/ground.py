@@ -179,6 +179,7 @@ def main():
     src.add_argument("--serial", help="radio = serial device (board 3, 115200, ESP32 held in reset)")
     ap.add_argument("--log", type=Path, default=ROOT / tnet.LIVE_DIR / "ground.jsonl")
     ap.add_argument("--manager", action="store_true", help="TETHER manager on at start (policy.json, cmd 511)")
+    ap.add_argument("--mirror", help="also send the QGC stream to HOST[:14550] — a 2nd ground station (e.g. teammate)")
     a = ap.parse_args()
     a.log.parent.mkdir(parents=True, exist_ok=True)
     logf = open(a.log, "w", buffering=1)
@@ -186,6 +187,10 @@ def main():
     loc = socket.gethostbyname(tnet.LOCAL)
     qgc_addr, up_addr = (loc, tnet.QGC_PORT), (loc, tnet.AIR_UPLINK_PORT)
     gcs, ctl, ser, rsock = udp((loc, 0)), udp((loc, tnet.GROUND_CTRL_PORT)), None, None
+    msock = maddr = None
+    if a.mirror:
+        mh, _, mp = a.mirror.partition(":")
+        maddr, msock = (mh, int(mp or 14550)), udp(("", 0))
     if a.serial:
         import serial
         ser = serial.Serial()
@@ -201,6 +206,9 @@ def main():
     def to_qgc(data):
         with suppress(OSError):
             gcs.sendto(data, qgc_addr)
+        if msock is not None:
+            with suppress(OSError):
+                msock.sendto(data, maddr)
     def say(sev, text):                                  # TETHER -> operator, as a vehicle message in QGC
         print(text, flush=True)
         to_qgc(mav2.MAVLink_statustext_message(sev, text.encode()[:50]).pack(veh))
@@ -222,9 +230,13 @@ def main():
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(KeyboardInterrupt))
     try:
         while True:
-            r, _, _ = select.select([ser.fileno() if ser else rsock, gcs, ctl], [], [],
+            r, _, _ = select.select([ser.fileno() if ser else rsock, gcs, ctl] + ([msock] if msock else []), [], [],
                                     max(0.0, min(next_tick - time.time(), 0.05)))
             for f in r:
+                if msock is not None and f is msock:          # 2nd ground station's commands -> PX4
+                    with suppress(OSError):
+                        gcs.sendto(msock.recv(65535), up_addr)
+                    continue
                 if f is ctl:
                     with suppress(OSError, ValueError):
                         msg = json.loads(ctl.recv(65535))
