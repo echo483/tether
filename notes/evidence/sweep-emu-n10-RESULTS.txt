@@ -1,0 +1,12 @@
+
+TETHER results — 10 paired runs U0 vs M (joined by seed) · window = squeeze (air C_Bps < L = 2300.4 B/s) · ± = 95% t-CI, df=9, t=2.262
+arm     n    age mean s     age p50 s     age p99 s    stale>1s %        loss %   goodput B/s
+U0     10     1.53±0.02     1.92±0.02     2.05±0.03          77±1      15.9±0.4        1644±3
+M      10     0.47±0.03     0.39±0.02     1.35±0.11          15±4       0.0±0.0        1528±3
+U0−M   10     1.06±0.04     1.52±0.04     0.70±0.12          63±4      15.9±0.4         116±4  paired
+HEADLINE  picture >1 s old for 77% of the squeeze unmanaged vs 15% with TETHER; paired U0−M = 63 pp, 95% CI [59, 67] pp (n=10)
+PREREG    falsifier U0 stale < 70%: no (77%) · falsifier M stale > 20%: no (15%) · paired CI excludes 0: yes
+SAY       "10 paired runs tonight: unmanaged, the picture was over a second old 77% of the squeeze; with TETHER, 15%. Paired difference 63 points, 95% CI 59 to 67. p99 age 2.05 s vs 1.35 s. Raw logs in the repo."
+
+BOUNDARY  squeeze C < L_crit = 1359.4 B/s · predicted level K/C, onset K/(L−C), L = 2300.4 B/s · tolerance: level ±max(25%, 0.3 s), onset ±max(50%, 1.0 s)
+  20261030-214233-M-11     M   C=700 K=3200  level pred 4.57 obs 4.39 s PASS · onset pred 2.00 obs 2.46 s PASS · stale 89% → PREDICTION PASS
