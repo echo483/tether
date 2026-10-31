@@ -1,0 +1,32 @@
+run logs/bay-on-193559
+  T+  44.1 s  range   251 m  air: capacity -> 1600 B/s
+  T+  76.2 s  range   559 m  air: capacity -> 700 B/s
+  T+ 102.3 s  range   541 m  air: capacity -> 1600 B/s
+  T+ 133.3 s  range   242 m  air: capacity -> unlimited
+  T+  -6.1 s  range     0 m  manager True
+  T+  46.7 s  range   275 m  TETHER shed -> tier 2 (qdelay>0.5s for 0.6s)
+  T+  54.9 s  range   353 m  TETHER restore -> tier 1 (qdelay<0.1s for 3.0s, probe up)
+  T+  57.9 s  range   383 m  TETHER restore -> tier 0 (qdelay<0.1s for 3.0s, probe up)
+  T+  59.8 s  range   401 m  TETHER shed -> tier 2 (qdelay>0.5s for 0.6s)
+  T+  66.8 s  range   468 m  TETHER restore -> tier 1 (qdelay<0.1s for 3.0s, probe up)
+  T+  70.3 s  range   502 m  TETHER restore -> tier 0 (qdelay<0.1s for 3.0s, probe up)
+  T+  72.2 s  range   521 m  TETHER shed -> tier 2 (qdelay>0.5s for 0.6s)
+  T+  79.0 s  range   587 m  TETHER FAILSAFE RTL: all 2 sheddable tiers shed and picture_age>1s for 3s (picture_age 1.788 s, link stale)
+  T+  79.0 s  range   587 m    cmd RTL sent
+  T+  79.3 s  range   590 m    cmd RTL sent
+  T+  79.6 s  range   593 m    cmd RTL sent
+  T+  81.6 s  range   610 m    COMMAND_ACK cmd 20 result 0
+  T+  82.6 s  range   619 m    COMMAND_ACK cmd 20 result 0
+  T+  83.6 s  range   625 m    COMMAND_ACK cmd 20 result 0
+  T+ 107.8 s  range   487 m  TETHER restore -> tier 1 (qdelay<0.1s for 3.0s, probe up)
+  T+ 110.8 s  range   458 m  TETHER restore -> tier 0 (qdelay<0.1s for 3.0s, probe up)
+  T+ 112.5 s  range   441 m  TETHER shed -> tier 2 (qdelay>0.5s for 0.6s)
+  T+ 119.4 s  range   374 m  TETHER restore -> tier 1 (qdelay<0.1s for 3.0s, probe up)
+  T+ 122.4 s  range   345 m  TETHER restore -> tier 0 (qdelay<0.1s for 3.0s, probe up)
+  T+ 124.2 s  range   329 m  TETHER shed -> tier 2 (qdelay>0.5s for 0.6s)
+  T+ 131.4 s  range   262 m  TETHER restore -> tier 1 (qdelay<0.1s for 3.0s, probe up)
+  T+ 134.4 s  range   234 m  TETHER restore -> tier 0 (qdelay<0.1s for 3.0s, probe up)
+  T+ 186.9 s  range     0 m  TETHER restore -> tier 0 (exit)
+  T+  86.2 s  range   634 m  MAX RANGE 634 m (alt 39.8 m)
+  T+ 178.5 s  range     0 m  back on the ground: alt -0.0 m, range from home 0.2 m
+  picture_age in flight: max 4.5 s · >1 s for 37.6 s of 178 s (21%) · link=blackout for 0.0 s

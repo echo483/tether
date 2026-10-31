@@ -16,11 +16,15 @@ Control, tnet.LOCAL:tnet.AIR_CTRL_PORT udp, one JSON object per datagram (or lin
                                      deterministic; seed recorded; optional "c_lo"/"t_on"/"t_off" keys)
   {"blackout_s": S}                  drop ALL downlink arrivals for S s, queue frozen (logged as C_Bps 0)
   {"K_bytes": n}                     set K
+  {"range_model": true|false}        bay demo: C from the vehicle's distance to home (overrides C/profile while on)
+Range model (--range-model): air.py parses PX4's own downlink BEFORE the queue (ground truth, never the squeezed
+copy) for GLOBAL_POSITION_INT + HOME_POSITION (fallback home = first fix); d = equirectangular distance to home;
+d < --r-near -> unlimited · < --r-mid -> --c-mid B/s · < --r-far -> --c-far B/s · beyond -> blackout (drop all).
 Log: 1 Hz kind "air" lines (§2) + one kind "ctl" line per message -> --log | $TETHER_RUN_DIR/air.jsonl |
 logs/air-<ts>/air.jsonl. sweep.py --launch passes `--log … --seed N` only: put --emulated/--dev in --air-cmd
 or export TETHER_EMULATED=1 / TETHER_DEV=<path>.
 """
-import argparse, collections, errno, json, os, select, signal, socket, sys, time  # noqa: E401
+import argparse, collections, errno, json, math, os, select, signal, socket, sys, time  # noqa: E401
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -43,6 +47,12 @@ ap.add_argument("--hold-reset", action=argparse.BooleanOptionalAction, default=T
 ap.add_argument("--emu-port", type=int, default=EMU_SRC_PORT, help="emulated mode: our source port")
 ap.add_argument("--radio-host", default=os.environ.get("TETHER_RADIO_HOST"),
                 help="real RF: UDP to this host:14550 (board 1 = 192.168.2.1), same pacing as --emulated")
+ap.add_argument("--range-model", action="store_true", help="capacity from distance to home (bay demo); ctl toggles")
+ap.add_argument("--r-near", type=float, default=250.0, help="range model: unlimited below this (m)")
+ap.add_argument("--r-mid", type=float, default=550.0, help="range model: --c-mid below this (m)")
+ap.add_argument("--r-far", type=float, default=800.0, help="range model: --c-far below this, blackout beyond (m)")
+ap.add_argument("--c-mid", type=float, default=1600.0, help="range model: C between --r-near and --r-mid (B/s)")
+ap.add_argument("--c-far", type=float, default=700.0, help="range model: C between --r-mid and --r-far (B/s)")
 a = ap.parse_args()
 if not a.emulated and not a.dev and not a.radio_host:
     ap.error("pick the radio side: --emulated, --radio-host HOST, or --dev PATH")
@@ -60,6 +70,9 @@ def udp(port):
 
 
 px4s, ctl, upl = udp(tnet.PX4_PORT), udp(tnet.AIR_CTRL_PORT), udp(tnet.AIR_UPLINK_PORT)
+if a.radio_host and a.radio_host not in ("localhost", tnet.LOCAL) and not a.radio_host.startswith("127."):
+    upl.close()                              # two-laptop split: laptop 2's ground.py --uplink reaches us over WiFi
+    upl = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); upl.bind(("", tnet.AIR_UPLINK_PORT)); upl.setblocking(False)  # noqa
 ser = emu = fd = None
 if UDP_RADIO:
     if a.radio_host and a.radio_host not in ("localhost", tnet.LOCAL):
@@ -79,8 +92,40 @@ else:                                        # mirrors shuttle_passthrough.py + 
     fd = ser.fileno()                        # pyserial opens O_NONBLOCK on POSIX; we os.write() it ourselves
 rfds = [px4s, ctl, upl, emu if UDP_RADIO else fd]
 LINE = a.baud / 10.0                         # 8N1 line rate, B/s
-S = dict(C=a.c_bps, K=a.k_bytes, seed=a.seed, prof=None, bo_until=0.0, px4=None)
+S = dict(C=a.c_bps, K=a.k_bytes, seed=a.seed, prof=None, bo_until=0.0, px4=None,
+         rm=a.range_model, home=None, home_src=None, pos=None, rng=None, alt=None)
 q, qb, inflight = collections.deque(), 0, b""
+from pymavlink.dialects.v20 import common as _mav2  # noqa: E402  range model only reads, never re-encodes
+MP = _mav2.MAVLink(None)
+MP.robust_parsing = True                     # unknown/garbled frames become BAD_DATA, never an exception
+
+
+def track(d):
+    """Range model input: PX4's position + home from the raw downlink datagram (pre-queue = truth)."""
+    try:
+        msgs = MP.parse_buffer(d) or []
+    except Exception:                        # never let a parse problem touch the shuttle
+        return
+    for m in msgs:
+        t = m.get_type()
+        if t == "GLOBAL_POSITION_INT" and (m.lat or m.lon):
+            S["pos"], S["alt"] = (m.lat / 1e7, m.lon / 1e7), m.relative_alt / 1000.0
+            if S["home"] is None:
+                S["home"], S["home_src"] = S["pos"], "first_fix"
+        elif t == "HOME_POSITION" and (m.latitude or m.longitude):
+            S["home"], S["home_src"] = (m.latitude / 1e7, m.longitude / 1e7), "HOME_POSITION"
+    if S["home"] and S["pos"]:               # equirectangular: plenty at < 2 km
+        (la0, lo0), (la, lo) = S["home"], S["pos"]
+        S["rng"] = 6371000.0 * math.hypot(math.radians(la - la0),
+                                          math.radians(lo - lo0) * math.cos(math.radians((la + la0) / 2)))
+
+
+def range_cap():
+    """(C, blackout) from distance to home; no fix yet -> unlimited."""
+    d = S["rng"]
+    if d is None or d < a.r_near:
+        return None, False
+    return (a.c_mid, False) if d < a.r_mid else (a.c_far, False) if d < a.r_far else (0.0, True)
 st, win = dict(drops=0, drops_bo=0, nopeer=0), dict(off=0, sent=0, up=0)
 
 
@@ -96,6 +141,8 @@ def out_waiting():
 
 def cap(now):
     """Effective C at monotonic `now` (None = unlimited). The step profile is a pure function of time."""
+    if S["rm"]:
+        return range_cap()[0]
     p = S["prof"]
     if p:
         dt = now - p["t0"]
@@ -127,6 +174,8 @@ def control(raw, now):
             print(f"air: unknown profile {m['profile']!r} ignored", flush=True)
         if "blackout_s" in m:
             S["bo_until"] = now + max(0.0, float(m["blackout_s"]))
+        if isinstance(m.get("range_model"), bool):
+            S["rm"] = m["range_model"]
         logf.write(json.dumps({"t": time.time(), "kind": "ctl", "msg": m}) + "\n")
         print(f"air: ctl {json.dumps(m)}", flush=True)
 
@@ -150,7 +199,7 @@ try:
     while True:
         r, _, _ = select.select(rfds, [], [], 0.005)
         now = time.monotonic()
-        bo = now < S["bo_until"]
+        bo = now < S["bo_until"] or (S["rm"] and range_cap()[1])
         while px4s in r:                     # PX4 -> drop-tail queue (drain every pending datagram)
             try:
                 d, src = px4s.recvfrom(65535)
@@ -160,6 +209,7 @@ try:
                 S["px4"] = src
                 print(f"air: PX4 peer = {src}", flush=True)
             win["off"] += len(d)
+            track(d)
             depth = max(depth, float(len(d)))
             if bo or qb + len(d) > S["K"]:
                 st["drops"] += 1; st["drops_bo"] += bo  # noqa: E702
@@ -201,11 +251,15 @@ try:
                    "offered_Bps": round(win["off"] / el), "sent_Bps": round(win["sent"] / el),
                    "q_bytes": qb + len(inflight), "drops": st["drops"], "seed": S["seed"], "emulated": a.emulated,
                    "blackout": bo, "C_set": num(c), "profile": "step" if S["prof"] else None,
-                   "drops_bo": st["drops_bo"], "uplink_Bps": round(win["up"] / el)}
+                   "drops_bo": st["drops_bo"], "uplink_Bps": round(win["up"] / el),
+                   "range_m": None if S["rng"] is None else round(S["rng"], 1), "range_model": S["rm"],
+                   "alt_m": None if S["alt"] is None else round(S["alt"], 1), "home_src": S["home_src"]}
             logf.write(json.dumps(rec) + "\n")
+            rng = "—" if S["rng"] is None else f"{S['rng']:.0f}"
             print(f"air C={'∞' if c is None else f'{c:.0f}'}{' BLACKOUT' if bo else ''} K={S['K']} "
                   f"off {rec['offered_Bps']} sent {rec['sent_Bps']} B/s q {rec['q_bytes']} B drops {st['drops']} "
-                  f"(bo {st['drops_bo']}) up {rec['uplink_Bps']} B/s{' step' if S['prof'] else ''}", flush=True)
+                  f"(bo {st['drops_bo']}) up {rec['uplink_Bps']} B/s{' step' if S['prof'] and not S['rm'] else ''}"
+                  f" range {rng} m{' [RANGE MODEL]' if S['rm'] else ''}", flush=True)
             win = dict(off=0, sent=0, up=0)
 except KeyboardInterrupt:
     pass

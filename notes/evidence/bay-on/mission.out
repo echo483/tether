@@ -1,0 +1,226 @@
+[   0.0s] listening on udpin localhost:14571 (ground.py --mirror localhost:14571)
+[   0.5s] PX4 up: mode AUTO.LOITER armed False home (37.8063012, -122.4318014) alt 0.102
+[   0.5s] MISSION_COUNT 6 sent (attempt 1)
+[   0.5s]   item 0: cmd 22 37.806301,-122.431801 40 m
+[   0.5s]   item 1: cmd 178
+[   0.5s]   item 2: cmd 16 37.809001,-122.431801 40 m
+[   0.5s]   item 3: cmd 16 37.811701,-122.431801 40 m
+[   0.6s]   item 4: cmd 16 37.814401,-122.431801 40 m
+[   0.6s]   item 5: cmd 17 37.816201,-122.431801 40 m
+[   0.6s] MISSION_ACK type 0 (ACCEPTED) after 6 items
+[   0.6s] mission uploaded: takeoff 40 m, speed 15 m/s, legs [300.0, 600.0, 900.0, 1100.0] m north (last = hold), no RTL
+[   0.6s] set AUTO.MISSION -> ack 0
+[   1.6s] arm attempt 1 -> ack 0; armed True mode AUTO.MISSION
+[   3.6s] GO: armed, mode AUTO.MISSION
+[   3.8s] mode AUTO.MISSION  armed True  range      0 m  alt  -0.1 m  landed TAKEOFF  hb_age 0.2 s
+[   4.8s] mode AUTO.MISSION  armed True  range      0 m  alt   0.8 m  landed TAKEOFF  hb_age 0.2 s
+[   5.8s] mode AUTO.MISSION  armed True  range      0 m  alt   3.1 m  landed TAKEOFF  hb_age 0.2 s
+[   6.8s] mode AUTO.MISSION  armed True  range      0 m  alt   6.0 m  landed TAKEOFF  hb_age 0.1 s
+[   7.8s] mode AUTO.MISSION  armed True  range      0 m  alt   9.0 m  landed TAKEOFF  hb_age 0.1 s
+[   8.8s] mode AUTO.MISSION  armed True  range      0 m  alt  12.2 m  landed TAKEOFF  hb_age 0.1 s
+[   9.8s] mode AUTO.MISSION  armed True  range      0 m  alt  16.1 m  landed TAKEOFF  hb_age 0.1 s
+[  10.8s] mode AUTO.MISSION  armed True  range      0 m  alt  19.0 m  landed TAKEOFF  hb_age 0.0 s
+[  11.8s] mode AUTO.MISSION  armed True  range      0 m  alt  22.4 m  landed TAKEOFF  hb_age 1.0 s
+[  12.8s] mode AUTO.MISSION  armed True  range      1 m  alt  25.8 m  landed TAKEOFF  hb_age 1.0 s
+[  13.8s] mode AUTO.MISSION  armed True  range      1 m  alt  28.8 m  landed TAKEOFF  hb_age 1.0 s
+[  14.8s] mode AUTO.MISSION  armed True  range      0 m  alt  31.5 m  landed TAKEOFF  hb_age 0.9 s
+[  15.8s] mode AUTO.MISSION  armed True  range      0 m  alt  34.0 m  landed TAKEOFF  hb_age 0.9 s
+[  16.8s] mode AUTO.MISSION  armed True  range      0 m  alt  36.0 m  landed TAKEOFF  hb_age 0.9 s
+[  17.8s] mode AUTO.MISSION  armed True  range      0 m  alt  37.5 m  landed TAKEOFF  hb_age 0.9 s
+[  18.8s] mode AUTO.MISSION  armed True  range      0 m  alt  38.3 m  landed TAKEOFF  hb_age 0.8 s
+[  19.8s] mode AUTO.MISSION  armed True  range      0 m  alt  38.9 m  landed TAKEOFF  hb_age 0.8 s
+[  20.8s] mode AUTO.MISSION  armed True  range      0 m  alt  39.3 m  landed TAKEOFF  hb_age 0.8 s
+[  21.8s] mode AUTO.MISSION  armed True  range      1 m  alt  39.6 m  landed IN_AIR  hb_age 0.7 s
+[  22.8s] mode AUTO.MISSION  armed True  range      4 m  alt  39.8 m  landed IN_AIR  hb_age 0.7 s
+[  23.8s] mode AUTO.MISSION  armed True  range      8 m  alt  39.8 m  landed IN_AIR  hb_age 0.7 s
+[  24.8s] mode AUTO.MISSION  armed True  range     13 m  alt  39.8 m  landed IN_AIR  hb_age 0.7 s
+[  25.8s] mode AUTO.MISSION  armed True  range     21 m  alt  39.7 m  landed IN_AIR  hb_age 0.6 s
+[  26.8s] mode AUTO.MISSION  armed True  range     30 m  alt  39.6 m  landed IN_AIR  hb_age 0.6 s
+[  27.8s] mode AUTO.MISSION  armed True  range     39 m  alt  39.6 m  landed IN_AIR  hb_age 0.6 s
+[  28.8s] mode AUTO.MISSION  armed True  range     49 m  alt  39.6 m  landed IN_AIR  hb_age 0.5 s
+[  29.8s] mode AUTO.MISSION  armed True  range     59 m  alt  39.6 m  landed IN_AIR  hb_age 0.5 s
+[  30.8s] mode AUTO.MISSION  armed True  range     69 m  alt  39.8 m  landed IN_AIR  hb_age 0.5 s
+[  31.8s] mode AUTO.MISSION  armed True  range     77 m  alt  39.8 m  landed IN_AIR  hb_age 0.4 s
+[  32.8s] mode AUTO.MISSION  armed True  range     87 m  alt  39.8 m  landed IN_AIR  hb_age 0.4 s
+[  33.8s] mode AUTO.MISSION  armed True  range     98 m  alt  39.8 m  landed IN_AIR  hb_age 0.4 s
+[  34.8s] mode AUTO.MISSION  armed True  range    108 m  alt  39.9 m  landed IN_AIR  hb_age 0.3 s
+[  35.8s] mode AUTO.MISSION  armed True  range    118 m  alt  39.9 m  landed IN_AIR  hb_age 0.3 s
+[  36.8s] mode AUTO.MISSION  armed True  range    128 m  alt  40.0 m  landed IN_AIR  hb_age 0.3 s
+[  37.8s] mode AUTO.MISSION  armed True  range    136 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  38.8s] mode AUTO.MISSION  armed True  range    146 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  39.8s] mode AUTO.MISSION  armed True  range    153 m  alt  40.0 m  landed IN_AIR  hb_age 1.2 s
+[  40.8s] mode AUTO.MISSION  armed True  range    165 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[  41.8s] mode AUTO.MISSION  armed True  range    175 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[  42.8s] mode AUTO.MISSION  armed True  range    184 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[  43.9s] mode AUTO.MISSION  armed True  range    192 m  alt  39.9 m  landed IN_AIR  hb_age 0.0 s
+[  44.9s] mode AUTO.MISSION  armed True  range    202 m  alt  39.9 m  landed IN_AIR  hb_age 1.0 s
+[  45.9s] mode AUTO.MISSION  armed True  range    212 m  alt  39.9 m  landed IN_AIR  hb_age 1.0 s
+[  46.9s] mode AUTO.MISSION  armed True  range    222 m  alt  39.9 m  landed IN_AIR  hb_age 1.0 s
+[  47.9s] mode AUTO.MISSION  armed True  range    232 m  alt  39.9 m  landed IN_AIR  hb_age 1.0 s
+[  48.9s] mode AUTO.MISSION  armed True  range    242 m  alt  40.0 m  landed IN_AIR  hb_age 0.9 s
+[  49.9s] mode AUTO.MISSION  armed True  range    251 m  alt  39.9 m  landed IN_AIR  hb_age 0.9 s
+[  50.9s] mode AUTO.MISSION  armed True  range    257 m  alt  39.9 m  landed IN_AIR  hb_age 0.9 s
+[  51.9s] mode AUTO.MISSION  armed True  range    263 m  alt  39.9 m  landed IN_AIR  hb_age 0.4 s
+[  52.5s] STATUSTEXT 1/191 sev4: TETHER: link degraded - shed 2 tiers, 21 streams
+[  52.9s] mode AUTO.MISSION  armed True  range    271 m  alt  40.0 m  landed IN_AIR  hb_age 1.4 s
+[  53.9s] mode AUTO.MISSION  armed True  range    275 m  alt  40.1 m  landed IN_AIR  hb_age 1.0 s
+[  54.9s] mode AUTO.MISSION  armed True  range    285 m  alt  40.1 m  landed IN_AIR  hb_age 0.4 s
+[  55.9s] mode AUTO.MISSION  armed True  range    299 m  alt  40.1 m  landed IN_AIR  hb_age 0.5 s
+[  56.9s] mode AUTO.MISSION  armed True  range    312 m  alt  40.1 m  landed IN_AIR  hb_age 0.2 s
+[  57.9s] mode AUTO.MISSION  armed True  range    328 m  alt  40.0 m  landed IN_AIR  hb_age 0.5 s
+[  58.9s] mode AUTO.MISSION  armed True  range    335 m  alt  40.0 m  landed IN_AIR  hb_age 0.6 s
+[  59.9s] mode AUTO.MISSION  armed True  range    345 m  alt  40.0 m  landed IN_AIR  hb_age 0.6 s
+[  60.6s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 1
+[  60.9s] mode AUTO.MISSION  armed True  range    355 m  alt  39.9 m  landed IN_AIR  hb_age 0.6 s
+[  61.9s] mode AUTO.MISSION  armed True  range    365 m  alt  39.9 m  landed IN_AIR  hb_age 0.6 s
+[  62.9s] mode AUTO.MISSION  armed True  range    375 m  alt  39.9 m  landed IN_AIR  hb_age 0.5 s
+[  63.7s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 2
+[  63.9s] mode AUTO.MISSION  armed True  range    383 m  alt  39.9 m  landed IN_AIR  hb_age 0.5 s
+[  64.9s] mode AUTO.MISSION  armed True  range    389 m  alt  40.0 m  landed IN_AIR  hb_age 1.5 s
+[  65.6s] STATUSTEXT 1/191 sev4: TETHER: link degraded - shed 2 tiers, 21 streams
+[  65.9s] mode AUTO.MISSION  armed True  range    395 m  alt  40.0 m  landed IN_AIR  hb_age 0.9 s
+[  66.9s] mode AUTO.MISSION  armed True  range    401 m  alt  40.0 m  landed IN_AIR  hb_age 0.4 s
+[  67.9s] mode AUTO.MISSION  armed True  range    414 m  alt  40.0 m  landed IN_AIR  hb_age 0.5 s
+[  68.9s] mode AUTO.MISSION  armed True  range    429 m  alt  39.9 m  landed IN_AIR  hb_age 0.6 s
+[  69.9s] mode AUTO.MISSION  armed True  range    443 m  alt  40.1 m  landed IN_AIR  hb_age 0.3 s
+[  70.9s] mode AUTO.MISSION  armed True  range    453 m  alt  40.0 m  landed IN_AIR  hb_age 0.3 s
+[  71.9s] mode AUTO.MISSION  armed True  range    463 m  alt  40.0 m  landed IN_AIR  hb_age 0.3 s
+[  72.5s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 1
+[  72.9s] mode AUTO.MISSION  armed True  range    471 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  73.9s] mode AUTO.MISSION  armed True  range    481 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  74.9s] mode AUTO.MISSION  armed True  range    491 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  75.9s] mode AUTO.MISSION  armed True  range    501 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[  76.0s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 2
+[  76.9s] mode AUTO.MISSION  armed True  range    507 m  alt  40.0 m  landed IN_AIR  hb_age 1.1 s
+[  77.9s] mode AUTO.MISSION  armed True  range    513 m  alt  40.0 m  landed IN_AIR  hb_age 0.5 s
+[  77.9s] STATUSTEXT 1/191 sev4: TETHER: link degraded - shed 2 tiers, 21 streams
+[  78.9s] mode AUTO.MISSION  armed True  range    519 m  alt  40.0 m  landed IN_AIR  hb_age 0.0 s
+[  79.9s] mode AUTO.MISSION  armed True  range    529 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[  80.9s] mode AUTO.MISSION  armed True  range    541 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  81.9s] mode AUTO.MISSION  armed True  range    549 m  alt  40.0 m  landed IN_AIR  hb_age 1.2 s
+[  82.9s] mode AUTO.MISSION  armed True  range    555 m  alt  40.0 m  landed IN_AIR  hb_age 1.0 s
+[  83.9s] mode AUTO.MISSION  armed True  range    563 m  alt  40.0 m  landed IN_AIR  hb_age 0.5 s
+[  84.7s] STATUSTEXT 1/191 sev2: TETHER: picture lost over water - RTL
+[  84.9s] mode AUTO.MISSION  armed True  range    569 m  alt  40.0 m  landed IN_AIR  hb_age 0.2 s
+[  85.9s] mode AUTO.MISSION  armed True  range    577 m  alt  40.0 m  landed IN_AIR  hb_age 1.2 s
+[  86.9s] mode AUTO.MISSION  armed True  range    583 m  alt  40.0 m  landed IN_AIR  hb_age 0.7 s
+[  87.3s] STATUSTEXT 1/1 sev6: Returning to launch	
+[  87.9s] STATUSTEXT 1/1 sev6: RTL: start return at 51 m (41 m above destination)
+[  87.9s] mode AUTO.MISSION  armed True  range    587 m  alt  40.0 m  landed IN_AIR  hb_age 1.7 s
+[  88.0s] STATUSTEXT 1/1 sev6: 	
+[  88.4s] STATUSTEXT 1/1 sev6: Returning to launch	
+[  88.9s] mode AUTO.RTL      armed True  range    591 m  alt  40.0 m  landed IN_AIR  hb_age 0.4 s
+[  89.3s] STATUSTEXT 1/1 sev6: Returning to launch	
+[  89.9s] mode AUTO.RTL      armed True  range    597 m  alt  40.0 m  landed IN_AIR  hb_age 1.4 s
+[  90.9s] mode AUTO.RTL      armed True  range    603 m  alt  40.0 m  landed IN_AIR  hb_age 0.7 s
+[  91.9s] mode AUTO.RTL      armed True  range    612 m  alt  40.0 m  landed IN_AIR  hb_age 0.3 s
+[  92.9s] mode AUTO.RTL      armed True  range    619 m  alt  40.0 m  landed IN_AIR  hb_age 0.3 s
+[  93.9s] mode AUTO.RTL      armed True  range    627 m  alt  39.7 m  landed IN_AIR  hb_age 0.3 s
+[  95.0s] mode AUTO.RTL      armed True  range    630 m  alt  39.7 m  landed IN_AIR  hb_age 0.2 s
+[  96.0s] mode AUTO.RTL      armed True  range    633 m  alt  39.7 m  landed IN_AIR  hb_age 0.2 s
+[  97.0s] mode AUTO.RTL      armed True  range    634 m  alt  39.8 m  landed IN_AIR  hb_age 0.2 s
+[  98.0s] mode AUTO.RTL      armed True  range    633 m  alt  39.9 m  landed IN_AIR  hb_age 0.2 s
+[  99.0s] mode AUTO.RTL      armed True  range    633 m  alt  39.9 m  landed IN_AIR  hb_age 0.1 s
+[ 100.0s] mode AUTO.RTL      armed True  range    632 m  alt  40.0 m  landed IN_AIR  hb_age 1.1 s
+[ 101.0s] mode AUTO.RTL      armed True  range    631 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 102.0s] mode AUTO.RTL      armed True  range    628 m  alt  40.0 m  landed IN_AIR  hb_age 0.0 s
+[ 103.0s] mode AUTO.RTL      armed True  range    624 m  alt  40.1 m  landed IN_AIR  hb_age 0.1 s
+[ 104.0s] mode AUTO.RTL      armed True  range    618 m  alt  40.1 m  landed IN_AIR  hb_age 1.1 s
+[ 105.0s] mode AUTO.RTL      armed True  range    611 m  alt  40.1 m  landed IN_AIR  hb_age 1.0 s
+[ 106.0s] mode AUTO.RTL      armed True  range    602 m  alt  40.1 m  landed IN_AIR  hb_age 1.0 s
+[ 107.0s] mode AUTO.RTL      armed True  range    593 m  alt  40.1 m  landed IN_AIR  hb_age 1.0 s
+[ 108.0s] mode AUTO.RTL      armed True  range    574 m  alt  40.0 m  landed IN_AIR  hb_age 0.5 s
+[ 109.0s] mode AUTO.RTL      armed True  range    553 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 110.0s] mode AUTO.RTL      armed True  range    535 m  alt  40.0 m  landed IN_AIR  hb_age 0.6 s
+[ 111.0s] mode AUTO.RTL      armed True  range    521 m  alt  40.0 m  landed IN_AIR  hb_age 0.4 s
+[ 112.0s] mode AUTO.RTL      armed True  range    504 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 113.0s] mode AUTO.RTL      armed True  range    492 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 113.5s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 1
+[ 114.0s] mode AUTO.RTL      armed True  range    482 m  alt  39.9 m  landed IN_AIR  hb_age 0.1 s
+[ 115.0s] mode AUTO.RTL      armed True  range    472 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 116.0s] mode AUTO.RTL      armed True  range    462 m  alt  40.0 m  landed IN_AIR  hb_age 0.0 s
+[ 116.6s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 2
+[ 117.0s] mode AUTO.RTL      armed True  range    456 m  alt  40.1 m  landed IN_AIR  hb_age 1.0 s
+[ 118.0s] mode AUTO.RTL      armed True  range    450 m  alt  40.1 m  landed IN_AIR  hb_age 0.6 s
+[ 118.3s] STATUSTEXT 1/191 sev4: TETHER: link degraded - shed 2 tiers, 21 streams
+[ 119.0s] mode AUTO.RTL      armed True  range    444 m  alt  40.1 m  landed IN_AIR  hb_age 0.1 s
+[ 120.0s] mode AUTO.RTL      armed True  range    434 m  alt  40.1 m  landed IN_AIR  hb_age 1.1 s
+[ 121.0s] mode AUTO.RTL      armed True  range    424 m  alt  40.1 m  landed IN_AIR  hb_age 0.1 s
+[ 122.0s] mode AUTO.RTL      armed True  range    406 m  alt  40.1 m  landed IN_AIR  hb_age 0.5 s
+[ 123.0s] mode AUTO.RTL      armed True  range    393 m  alt  40.1 m  landed IN_AIR  hb_age 0.8 s
+[ 124.0s] mode AUTO.RTL      armed True  range    383 m  alt  40.2 m  landed IN_AIR  hb_age 0.9 s
+[ 125.0s] mode AUTO.RTL      armed True  range    375 m  alt  40.2 m  landed IN_AIR  hb_age 0.8 s
+[ 125.1s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 1
+[ 126.0s] mode AUTO.RTL      armed True  range    365 m  alt  40.2 m  landed IN_AIR  hb_age 0.8 s
+[ 127.0s] mode AUTO.RTL      armed True  range    356 m  alt  40.2 m  landed IN_AIR  hb_age 0.8 s
+[ 128.0s] mode AUTO.RTL      armed True  range    346 m  alt  40.2 m  landed IN_AIR  hb_age 0.8 s
+[ 128.2s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 2
+[ 129.0s] mode AUTO.RTL      armed True  range    342 m  alt  40.1 m  landed IN_AIR  hb_age 0.3 s
+[ 129.9s] STATUSTEXT 1/191 sev4: TETHER: link degraded - shed 2 tiers, 21 streams
+[ 130.0s] mode AUTO.RTL      armed True  range    335 m  alt  40.1 m  landed IN_AIR  hb_age 1.3 s
+[ 131.0s] mode AUTO.RTL      armed True  range    329 m  alt  40.1 m  landed IN_AIR  hb_age 0.8 s
+[ 132.0s] mode AUTO.RTL      armed True  range    320 m  alt  40.0 m  landed IN_AIR  hb_age 0.5 s
+[ 133.0s] mode AUTO.RTL      armed True  range    306 m  alt  40.0 m  landed IN_AIR  hb_age 0.6 s
+[ 134.0s] mode AUTO.RTL      armed True  range    291 m  alt  40.1 m  landed IN_AIR  hb_age 0.4 s
+[ 135.0s] mode AUTO.RTL      armed True  range    281 m  alt  40.1 m  landed IN_AIR  hb_age 0.5 s
+[ 136.0s] mode AUTO.RTL      armed True  range    272 m  alt  40.1 m  landed IN_AIR  hb_age 0.5 s
+[ 137.0s] mode AUTO.RTL      armed True  range    262 m  alt  40.1 m  landed IN_AIR  hb_age 0.5 s
+[ 137.1s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 1
+[ 138.0s] mode AUTO.RTL      armed True  range    252 m  alt  40.1 m  landed IN_AIR  hb_age 0.5 s
+[ 139.0s] mode AUTO.RTL      armed True  range    244 m  alt  40.2 m  landed IN_AIR  hb_age 0.4 s
+[ 140.0s] mode AUTO.RTL      armed True  range    234 m  alt  40.1 m  landed IN_AIR  hb_age 0.4 s
+[ 140.1s] STATUSTEXT 1/191 sev6: TETHER: link recovered - restored tier 2
+[ 141.0s] mode AUTO.RTL      armed True  range    224 m  alt  40.1 m  landed IN_AIR  hb_age 0.4 s
+[ 142.0s] mode AUTO.RTL      armed True  range    214 m  alt  40.1 m  landed IN_AIR  hb_age 0.4 s
+[ 143.0s] mode AUTO.RTL      armed True  range    204 m  alt  40.1 m  landed IN_AIR  hb_age 0.3 s
+[ 144.0s] mode AUTO.RTL      armed True  range    194 m  alt  40.0 m  landed IN_AIR  hb_age 0.3 s
+[ 145.1s] mode AUTO.RTL      armed True  range    184 m  alt  40.1 m  landed IN_AIR  hb_age 0.3 s
+[ 146.1s] mode AUTO.RTL      armed True  range    176 m  alt  40.1 m  landed IN_AIR  hb_age 0.2 s
+[ 147.1s] mode AUTO.RTL      armed True  range    166 m  alt  40.1 m  landed IN_AIR  hb_age 0.2 s
+[ 148.1s] mode AUTO.RTL      armed True  range    157 m  alt  40.1 m  landed IN_AIR  hb_age 0.2 s
+[ 149.1s] mode AUTO.RTL      armed True  range    147 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 150.1s] mode AUTO.RTL      armed True  range    137 m  alt  40.0 m  landed IN_AIR  hb_age 0.1 s
+[ 151.1s] mode AUTO.RTL      armed True  range    127 m  alt  40.1 m  landed IN_AIR  hb_age 0.1 s
+[ 152.1s] mode AUTO.RTL      armed True  range    118 m  alt  39.9 m  landed IN_AIR  hb_age 0.1 s
+[ 153.1s] mode AUTO.RTL      armed True  range    110 m  alt  39.9 m  landed IN_AIR  hb_age 0.0 s
+[ 154.1s] mode AUTO.RTL      armed True  range    100 m  alt  39.9 m  landed IN_AIR  hb_age 1.0 s
+[ 155.1s] mode AUTO.RTL      armed True  range     90 m  alt  39.8 m  landed IN_AIR  hb_age 1.0 s
+[ 156.1s] mode AUTO.RTL      armed True  range     80 m  alt  39.8 m  landed IN_AIR  hb_age 1.0 s
+[ 157.1s] mode AUTO.RTL      armed True  range     69 m  alt  39.9 m  landed IN_AIR  hb_age 0.9 s
+[ 158.1s] mode AUTO.RTL      armed True  range     59 m  alt  39.9 m  landed IN_AIR  hb_age 0.9 s
+[ 159.1s] mode AUTO.RTL      armed True  range     49 m  alt  40.0 m  landed IN_AIR  hb_age 0.9 s
+[ 160.1s] mode AUTO.RTL      armed True  range     39 m  alt  40.0 m  landed IN_AIR  hb_age 0.9 s
+[ 161.1s] mode AUTO.RTL      armed True  range     31 m  alt  40.0 m  landed IN_AIR  hb_age 0.8 s
+[ 162.1s] mode AUTO.RTL      armed True  range     22 m  alt  40.0 m  landed IN_AIR  hb_age 0.8 s
+[ 163.1s] mode AUTO.RTL      armed True  range     15 m  alt  39.9 m  landed IN_AIR  hb_age 0.8 s
+[ 164.1s] mode AUTO.RTL      armed True  range      9 m  alt  39.9 m  landed IN_AIR  hb_age 0.8 s
+[ 165.1s] mode AUTO.RTL      armed True  range      4 m  alt  40.0 m  landed IN_AIR  hb_age 0.7 s
+[ 165.7s] STATUSTEXT 1/1 sev6: RTL: land at destination	
+[ 166.1s] mode AUTO.RTL      armed True  range      1 m  alt  40.0 m  landed IN_AIR  hb_age 0.7 s
+[ 167.1s] mode AUTO.RTL      armed True  range      1 m  alt  38.9 m  landed LANDING  hb_age 0.7 s
+[ 168.1s] mode AUTO.RTL      armed True  range      1 m  alt  36.7 m  landed LANDING  hb_age 0.6 s
+[ 169.1s] mode AUTO.RTL      armed True  range      1 m  alt  33.7 m  landed LANDING  hb_age 0.6 s
+[ 170.1s] mode AUTO.RTL      armed True  range      1 m  alt  30.5 m  landed LANDING  hb_age 0.6 s
+[ 171.1s] mode AUTO.RTL      armed True  range      1 m  alt  27.4 m  landed LANDING  hb_age 0.6 s
+[ 172.1s] mode AUTO.RTL      armed True  range      1 m  alt  24.4 m  landed LANDING  hb_age 0.5 s
+[ 173.1s] mode AUTO.RTL      armed True  range      1 m  alt  21.4 m  landed LANDING  hb_age 0.5 s
+[ 174.1s] mode AUTO.RTL      armed True  range      1 m  alt  18.3 m  landed LANDING  hb_age 0.5 s
+[ 175.1s] mode AUTO.RTL      armed True  range      1 m  alt  15.9 m  landed LANDING  hb_age 0.4 s
+[ 176.1s] mode AUTO.RTL      armed True  range      0 m  alt  12.9 m  landed LANDING  hb_age 0.4 s
+[ 177.1s] mode AUTO.RTL      armed True  range      0 m  alt   9.8 m  landed LANDING  hb_age 0.4 s
+[ 178.1s] mode AUTO.RTL      armed True  range      0 m  alt   7.1 m  landed LANDING  hb_age 0.3 s
+[ 179.1s] mode AUTO.RTL      armed True  range      0 m  alt   5.3 m  landed LANDING  hb_age 0.3 s
+[ 180.1s] mode AUTO.RTL      armed True  range      0 m  alt   4.0 m  landed LANDING  hb_age 0.3 s
+[ 181.1s] mode AUTO.RTL      armed True  range      0 m  alt   2.9 m  landed LANDING  hb_age 0.3 s
+[ 182.1s] mode AUTO.RTL      armed True  range      0 m  alt   2.0 m  landed LANDING  hb_age 0.2 s
+[ 183.1s] mode AUTO.RTL      armed True  range      0 m  alt   0.9 m  landed LANDING  hb_age 0.2 s
+[ 184.1s] mode AUTO.RTL      armed True  range      0 m  alt  -0.0 m  landed LANDING  hb_age 0.2 s
+[ 185.1s] mode AUTO.RTL      armed True  range      0 m  alt  -0.1 m  landed LANDING  hb_age 0.1 s
+[ 186.1s] mode AUTO.RTL      armed True  range      0 m  alt   0.0 m  landed LANDING  hb_age 0.1 s
+[ 187.1s] mode AUTO.RTL      armed True  range      0 m  alt   0.1 m  landed LANDING  hb_age 0.1 s
+[ 187.5s] STATUSTEXT 1/1 sev6: Landing detected	
+[ 188.1s] mode AUTO.RTL      armed True  range      0 m  alt   0.2 m  landed ON_GROUND  hb_age 0.0 s
+[ 189.1s] mode AUTO.RTL      armed True  range      0 m  alt   0.2 m  landed ON_GROUND  hb_age 1.0 s
+[ 189.6s] STATUSTEXT 1/1 sev6: Disarmed by landing	
+[ 190.1s] mode AUTO.RTL      armed True  range      0 m  alt   0.2 m  landed ON_GROUND  hb_age 1.0 s
+[ 190.3s] vehicle DISARMED — done

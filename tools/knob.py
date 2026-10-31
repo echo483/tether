@@ -5,6 +5,8 @@
     uv run python tools/knob.py blackout 3       # drop all downlink for 3 s
     uv run python tools/knob.py on | off         # TETHER manager on / off (live)
     uv run python tools/knob.py boundary         # squeeze below the critical set (700 B/s): TETHER must fail
+    uv run python tools/knob.py range on|off     # bay demo: capacity follows distance from home (air.py range model)
+    uv run python tools/knob.py fsreset          # re-arm the TETHER RTL failsafe (ground.py --failsafe)
     uv run python tools/knob.py                  # interactive: s=squeeze c=clear b=blackout 1=on 0=off x=boundary q=quit
 """
 import json
@@ -37,6 +39,10 @@ def do(cmd, arg=None):
         ground({"manager": True})
     elif cmd in ("off", "0"):
         ground({"manager": False})
+    elif cmd in ("range", "r"):
+        air({"range_model": (arg or "on") != "off"})
+    elif cmd in ("fsreset", "f"):
+        ground({"failsafe_reset": True})
     else:
         print(__doc__)
 
@@ -44,7 +50,7 @@ def do(cmd, arg=None):
 if len(sys.argv) > 1:
     do(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else None)
 else:
-    print("keys: s=squeeze 1600  c=clear  b=blackout 3 s  1=TETHER on  0=TETHER off  x=boundary 700  q=quit")
+    print("keys: s=squeeze 1600  c=clear  b=blackout 3 s  1=TETHER on  0=TETHER off  x=boundary 700  r [on|off]=range model  f=failsafe reset  q=quit")
     for line in sys.stdin:
         k = line.strip()
         if k == "q":
