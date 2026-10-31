@@ -1,0 +1,42 @@
+{
+ "name": "default",
+ "tiers": [
+  [
+   "HEARTBEAT",
+   "ATTITUDE",
+   "GLOBAL_POSITION_INT",
+   "SYS_STATUS",
+   "BATTERY_STATUS",
+   "EXTENDED_SYS_STATE"
+  ],
+  [
+   "VFR_HUD",
+   "LOCAL_POSITION_NED",
+   "ALTITUDE",
+   "HOME_POSITION",
+   "MISSION_CURRENT",
+   "GPS_RAW_INT",
+   "PING"
+  ],
+  [
+   "ATTITUDE_QUATERNION",
+   "ATTITUDE_TARGET",
+   "POSITION_TARGET_LOCAL_NED",
+   "OPEN_DRONE_ID_LOCATION",
+   "SERVO_OUTPUT_RAW",
+   "OPEN_DRONE_ID_SYSTEM",
+   "LINK_NODE_STATUS",
+   "ESTIMATOR_STATUS",
+   "SCALED_PRESSURE",
+   "TIME_ESTIMATE_TO_TARGET",
+   "DISTANCE_SENSOR",
+   "CURRENT_MODE",
+   "CURRENT_EVENT_SEQUENCE",
+   "VIBRATION"
+  ]
+ ],
+ "q_hi_s": 0.5,
+ "q_lo_s": 0.1,
+ "T_detect_s": 0.6,
+ "T_restore_s": 3.0
+}
