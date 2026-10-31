@@ -62,6 +62,10 @@ if a.rtl:                                                # no mirror needed: com
     say("RTL x3 sent to the command link")
     sys.exit(0)
 
+if a.go:                                                 # fresh flight: re-arm ground.py's latch-once RTL failsafe
+    import json, socket
+    socket.socket(socket.AF_INET, socket.SOCK_DGRAM).sendto(json.dumps({"failsafe_reset": True}).encode(),
+                                                             (tnet.LOCAL, tnet.GROUND_CTRL_PORT))
 c = mavutil.mavlink_connection(f"udpin:{tnet.LOCAL}:{a.mirror_port}", source_system=a.sysid, source_component=190)
 c.mav.robust_parsing = True
 ST = dict(hb=None, armed=None, mode="?", home=None, pos=None, alt=None, landed=0, t_hb=0.0)

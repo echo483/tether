@@ -65,11 +65,15 @@ class Tail:
 ground, air = Tail(D / "ground.jsonl", 5 * 120), Tail(D / "air.jsonl", 120)
 pol = {"mtime": None, "name": "default"}
 
+plt.rcParams["toolbar"] = "None"                  # no matplotlib toolbar: every pixel is the dashboard
 fig = plt.figure(figsize=(9.6, 10.2), facecolor=BG)
 try:
     fig.canvas.manager.set_window_title("TETHER")
+    if not a.snapshot:                              # right half of a 1920x1080 screen, QGC takes the left half
+        fig.canvas.manager.window.wm_geometry("960x1020+960+0")
 except Exception:
     pass
+SC = {"s": 1.0}                                     # font scale follows the window size (resize-safe half screen)
 top = fig.add_axes([0, 0.62, 1, 0.38]); top.axis("off")
 tr = fig.add_axes([0.11, 0.28, 0.85, 0.31])
 bot = fig.add_axes([0, 0, 1, 0.22]); bot.axis("off"); bot.set_xlim(0, 1); bot.set_ylim(0, 1)
@@ -86,6 +90,17 @@ for i, name in enumerate(("T0  critical", "T1", "T2  bulk")):
     blabels.append(bot.text(0.19 + i * 0.31, 0.66, name, ha="center", va="center", fontsize=24, weight="bold", color=FG))
 stats = bot.text(0.5, 0.20, "", ha="center", va="center", fontsize=20, color=FG, family="monospace")
 poltxt = bot.text(0.5, 0.03, "", ha="center", va="bottom", fontsize=14, color=DIM)
+BASE = [(t, t.get_fontsize()) for t in fig.findobj(lambda o: hasattr(o, "set_fontsize") and hasattr(o, "get_text"))]
+
+
+def on_resize(_ev=None):
+    w, h = fig.get_size_inches() * fig.dpi
+    SC["s"] = max(0.4, min(w / 960.0, h / 1020.0))
+    for t, f0 in BASE:
+        t.set_fontsize(f0 * SC["s"])
+
+
+fig.canvas.mpl_connect("resize_event", on_resize)
 
 
 def spans(rows, dur, pred):
@@ -128,11 +143,15 @@ def update(_=None):
     link = (last.get("link") or "?") if fresh else "no data"
     lnk.set_text(link.upper()); lnk.set_color(LINK_COL.get(link, DIM))
     on = last.get("manager") if last else None
-    mgr.set_text("" if on is None else "TETHER ON" if on else "TETHER OFF")
-    mgr.set_color(DIM if not fresh else GREEN if on else AMBER)
+    fs = bool(last and last.get("failsafe"))
+    mgr.set_text("" if on is None else "TETHER: RTL" if fs else "TETHER ON" if on else "TETHER OFF")
+    mgr.set_color(DIM if not fresh else RED if fs else GREEN if on else AMBER)
     arows = [r for r in air.rows if r.get("kind", "air") == "air"]
     alast = arows[-1] if arows and anchor - arows[-1]["t"] < 5.0 else None
-    emu.set_visible(bool(alast and alast.get("emulated")))
+    emu.set_visible(alast is not None)
+    if alast is not None:
+        emu.set_text("EMULATED LINK" if alast.get("emulated") else "REAL 2.4 GHz LINK")
+        emu.set_color(RED if alast.get("emulated") else GREEN)
 
     tr.cla(); tr.set_facecolor(BG)
     lo = anchor - a.window
@@ -154,16 +173,18 @@ def update(_=None):
     tr.axhline(1.0, color=RED, ls="--", lw=2)
     ymax = max([2.5] + [min(10.0, y * 1.15) for y in ys if y == y])
     tr.set_xlim(-a.window, 0); tr.set_ylim(0, ymax)
-    tr.set_ylabel("picture age (s)", color=FG, fontsize=16); tr.set_xlabel("seconds ago", color=FG, fontsize=14)
-    tr.tick_params(colors=FG, labelsize=14)
+    k = SC["s"]
+    tr.set_ylabel("picture age (s)", color=FG, fontsize=16 * k); tr.set_xlabel("seconds ago", color=FG, fontsize=14 * k)
+    tr.tick_params(colors=FG, labelsize=14 * k)
     for sp in tr.spines.values():
         sp.set_color(DIM)
     hs = [Line2D([], [], color=RED, ls="--", lw=2, label="1.0 s = stale")]
     if any(t1 > lo for t0, t1 in sq):
-        hs.append(Patch(color="#3b4a66", label="capacity squeeze (synthetic, seeded)"))
+        hs.append(Patch(color="#3b4a66", label="capacity vs range (synthetic)" if (alast or {}).get("range_model")
+                        else "capacity squeeze (synthetic, seeded)"))
     if any(t1 > lo for t0, t1 in bo):
         hs.append(Patch(color=ORANGE, alpha=0.6, label="blackout"))
-    tr.legend(handles=hs, loc="upper left", fontsize=13, facecolor=BG, edgecolor=DIM, labelcolor=FG)
+    tr.legend(handles=hs, loc="upper left", fontsize=13 * k, facecolor=BG, edgecolor=DIM, labelcolor=FG)
 
     rx = (last or {}).get("rx_hz") or {}
     for i, k in enumerate(("T0", "T1", "T2")):
@@ -177,7 +198,9 @@ def update(_=None):
     if last:
         c = c_of(alast) if alast else None
         cap = "n/a" if not alast else "0 (blackout)" if alast.get("blackout") else "unlimited" if c is None else f"{c:.0f} B/s"
-        stats.set_text(f"goodput {last.get('goodput_Bps') or 0:.0f} B/s   loss {100 * (last.get('loss') or 0):.1f} %"
+        rng = (alast or {}).get("range_m")
+        stats.set_text((f"range {rng:.0f} m   " if rng is not None else "") +
+                       f"goodput {last.get('goodput_Bps') or 0:.0f} B/s   loss {100 * (last.get('loss') or 0):.1f} %"
                        f"   C {cap}")
     poltxt.set_text(f"policy: {pol['name']}   ·   shed tiers: {(last or {}).get('tier', '—')}")
     return []

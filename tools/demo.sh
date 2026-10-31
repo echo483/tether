@@ -39,21 +39,19 @@ case "$MODE" in
     if [ "$MODE" = bay-rf ]; then need_dev; rf_on; AIR="--radio-host $B1"; GND="--serial $DEV"; else AIR="--emulated"; GND=""; fi
     $PY run python -u tools/air.py $AIR --range-model > logs/live-air.out 2>&1 & A=$!
     sleep 1
-    $PY run python -u tools/ground.py $GND --failsafe --mirror localhost:14571 > logs/live-ground.out 2>&1 & G=$!
+    $PY run python -u tools/ground.py $GND --manager --failsafe --mirror localhost:14571 > logs/live-ground.out 2>&1 & G=$!
     sleep 2
     $PY run python tools/dash.py > logs/live-dash.out 2>&1 & D=$!
     trap 'kill $A $G $D 2>/dev/null; [ "$MODE" = bay-rf ] && rf_off; echo stopped' EXIT INT TERM
     cat <<EOF
 running ($MODE). Capacity follows range from home (Fort Mason): <250 m unlimited, <550 m 1600 B/s, <800 m 700 B/s,
-beyond = BLACKOUT (air.py --range-model; synthetic, disclosed). TETHER manager starts OFF; its RTL failsafe is armed.
+beyond = BLACKOUT (air.py --range-model; synthetic, disclosed). TETHER starts ON (manager + RTL failsafe). knob.py off = the no-TETHER comparison.
 QGC: ~/.local/opt/qgc/squashfs-root/AppRun      keys: $PY run python tools/knob.py
- A) WITHOUT TETHER (drone is lost):   $PY run python tools/mission_bay.py --go --watch
-      -> flies north over the bay, blackout past 800 m, holds at 1100 m; nothing brings it back.
-      recover:  $PY run python tools/mission_bay.py --rtl      (wait for it to land + auto-disarm)
- B) WITH TETHER (drone comes home):   $PY run python tools/knob.py on
-                                      $PY run python tools/mission_bay.py --go --watch
+ A) WITH TETHER (default):   $PY run python tools/mission_bay.py --go --watch
       -> sheds bulk at ~260 m, picture lost past 550 m, TETHER commands RTL ~3 s later, lands at Fort Mason.
-      re-arm the failsafe for another run: $PY run python tools/knob.py fsreset
+ B) WITHOUT TETHER:           $PY run python tools/knob.py off   then the same mission command
+      -> blackout past 800 m, nothing brings it back. Recover: $PY run python tools/mission_bay.py --rtl
+ Every --go re-arms the failsafe. Windows: QGC Super+Left, dashboard opens on the right half.
 EOF
     tail -f logs/live-ground.out
     ;;
