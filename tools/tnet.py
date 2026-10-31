@@ -18,3 +18,4 @@ AIR_CTRL_PORT = 14599            # air.py control port (JSON lines)
 WIFI_IF = "wlp0s20f3"            # laptop WiFi joined to the DroneBridge AP
 AIR_UPLINK_PORT = 14598          # air.py binds: any MAVLink datagram here is forwarded raw to PX4 (the command link)
 LIVE_DIR = "logs/live"           # default log dir when not under sweep.py: logs/live/{air,ground}.jsonl
+GROUND_CTRL_PORT = 14597         # ground.py control: {"manager": true|false} toggles TETHER live (demo key)
