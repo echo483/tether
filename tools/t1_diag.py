@@ -12,6 +12,8 @@ import json
 import time
 import urllib.request
 
+import socket
+
 import serial
 from pymavlink.dialects.v20 import common as mav
 
@@ -66,10 +68,28 @@ window("B board3 running")
 ser.rts = True; time.sleep(0.3); ser.reset_input_buffer()
 hb = mav.MAVLink_heartbeat_message(2, 12, 0, 0, 4, 3).pack(mav.MAVLink(None, srcSystem=1, srcComponent=1))
 window("C held+heartbeats", send=hb)
+
+# D: the other direction. Send UDP to board 1; DroneBridge writes it out its TX (D19) -> wire 2 -> board 3 TX0
+# -> CP2102 -> laptop. Board 3 held. Tests wire 2 + GND without needing wire 1.
+u = socket.socket(socket.AF_INET, socket.SOCK_DGRAM); u.bind(("", 0)); u.setblocking(False)
+gcs = mav.MAVLink_heartbeat_message(6, 8, 0, 0, 4, 3).pack(mav.MAVLink(None, srcSystem=255, srcComponent=190))
+heard = b""; t0 = time.time(); nxt = t0
+while time.time() - t0 < 5.0:
+    heard += ser.read(4096)
+    if time.time() >= nxt:
+        try: u.sendto(gcs, (DB.split("//")[1], 14550))
+        except OSError: pass
+        nxt += 0.02
+parser = mav.MAVLink(None); parser.robust_parsing = True
+n_hb = sum(1 for m in (parser.parse_buffer(heard) or []) if m.get_type() == "HEARTBEAT")
+res["D uplink"] = (len(heard), n_hb)
+print(f"D uplink: laptop heard {len(heard)} B from board 1 via wire 2, {n_hb} heartbeats decoded (sent ~250)")
 ser.close()
 
-A, B, C = res["A held+silent"], res["B board3 running"], res["C held+heartbeats"]
+A, B, C, D = res["A held+silent"], res["B board3 running"], res["C held+heartbeats"], res["D uplink"]
 print("\nVERDICT:")
+up_ok = D[1] > 50
+print(f"  wire 2 + GND (board1 D19 -> board3 TX0): {'OK' if up_ok else 'NOT WORKING'}")
 if None in (A, B, C):
     print("  could not read board 1 counters — laptop not on the AP?")
 elif C[1] > 100:
@@ -78,7 +98,11 @@ elif B[0] > 2000 and C[0] < 1000:
     print("  JUMPERS SWAPPED: board 1's RX hears board 3's TX0. Swap the two jumper ends AT BOARD 1 (D18<->D19), rerun.")
 elif C[0] > 2000 and C[1] == 0:
     print(f"  BYTES ARRIVE BUT DON'T DECODE ({C[0]} B): baud mismatch or a bad contact. Check baud above; re-seat jumpers + GND.")
+elif up_ok:
+    print("  GND and wire 2 are GOOD, so WIRE 1 is the problem: it must run board 3 RX0 -> board 1 D18.")
+    print("  Check its board-3 end is in RX0's row (not TX0 just above it) and its board-1 end in D18's row (not D19 / D5 beside it).")
 elif C[0] < 1000 and B[0] < 1000:
-    print("  NOTHING REACHES BOARD 1: loose/wrong-row jumper or missing GND. Re-seat wire 1 (board3 RX0 -> board1 D18) and wire 3 (GND).")
+    print("  NOTHING CROSSES IN EITHER DIRECTION: most likely the GND jumper (board 3 GND -> board 1 GND) is missing or in the wrong row.")
+    print("  Fix GND first, then re-seat wires 1 and 2. Send Hermes a photo if unsure.")
 else:
     print("  unclear — send this report to Hermes.")
