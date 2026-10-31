@@ -64,3 +64,16 @@ The squeeze is synthetic, seeded, **time-indexed** (both arms see the same C(t))
 The squeeze applies to the **downlink only** (PX4 → ground). The uplink is untouched — that is why a
 ground-side manager can command PX4 over a degraded link. Never block on COMMAND_ACK; confirm by
 the measured rate.
+
+## 6. Sprint amendments (18:50) — supersede the above where they differ
+- **Command link is separate and local.** The uplink (QGC's commands and the manager's cmd 511) goes to
+  `localhost:14598` (`tnet.AIR_UPLINK_PORT`); air.py forwards it raw to PX4. The squeeze and every metric
+  apply to the telemetry downlink only. Disclose: "commands ride a separate link".
+- **Radio side of air.py:** `--emulated` = UDP to `localhost:14550`; `--radio-host 192.168.2.1` = the same UDP
+  over real 2.4 GHz to board 1, whose UART TX (D19, proven by t1_diag test D) carries it into board 3 → laptop.
+  The laptop→board 1 serial direction (wire 1) is dead and is not used.
+- **ground.py input:** `--udp-bind 14550` (emulated) or `--serial /dev/serial/by-path/…` (real RF: board 3,
+  opened with hold-reset). Output: raw bytes → QGC `localhost:14560`; QGC's replies → `localhost:14598`.
+- **CLIs used by tools/sweep.py:** `air.py --log DIR/air.jsonl --seed N`, `ground.py --log DIR/ground.jsonl [--manager]`.
+  Without `--log`: `logs/live/air.jsonl`, `logs/live/ground.jsonl` (truncated at start).
+- The manager lives inside ground.py (`--manager`), reads `policy.json`, sends cmd 511 to `localhost:14598`.

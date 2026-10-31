@@ -16,3 +16,5 @@ PX4_PORT = 14601               # PX4 TETHER mavlink instance -> host localhost:1
 QGC_PORT = 14560                 # QGC listens here; ground.py forwards to it
 AIR_CTRL_PORT = 14599            # air.py control port (JSON lines)
 WIFI_IF = "wlp0s20f3"            # laptop WiFi joined to the DroneBridge AP
+AIR_UPLINK_PORT = 14598          # air.py binds: any MAVLink datagram here is forwarded raw to PX4 (the command link)
+LIVE_DIR = "logs/live"           # default log dir when not under sweep.py: logs/live/{air,ground}.jsonl
