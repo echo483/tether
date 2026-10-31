@@ -1,0 +1,12 @@
+run logs/bay-off-194021
+  T+  43.1 s  range   250 m  air: capacity -> 1600 B/s
+  T+  75.2 s  range   559 m  air: capacity -> 700 B/s
+  T+ 101.2 s  range   804 m  air: capacity -> BLACKOUT
+  T+ 150.4 s  range   798 m  air: capacity -> 700 B/s
+  T+ 176.4 s  range   547 m  air: capacity -> 1600 B/s
+  T+ 208.5 s  range   241 m  air: capacity -> unlimited
+  T+ 115.9 s  range   944 m  manual_rtl 
+  T+ 123.3 s  range   995 m  MAX RANGE 995 m (alt 40.2 m)
+  T+ 253.6 s  range     0 m  back on the ground: alt 0.4 m, range from home 0.2 m
+  picture_age in flight: max 50.4 s · >1 s for 103.8 s of 254 s (41%) · link=blackout for 48.4 s
+  air blackout: 49 s total (from T+101.2 s)
